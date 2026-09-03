@@ -1,0 +1,1 @@
+A cryptic wordplay puzzle game designed for the Turkish language.
