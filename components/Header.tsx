@@ -7,13 +7,13 @@ export default function Header({ text }: { text: string }) {
                 alignItems: "center",
                 justifyContent: "center",
                 textAlign: "center",
-                padding: "5rem 1.5rem",
+                padding: "6rem 1.5rem 7rem",
             }}
         >
             <h1
                 style={{
                     margin: 0,
-                    color: "#f8fafc",
+                    color: "#29324d",
                     fontSize: "clamp(2.5rem, 6vw, 4.5rem)",
                     fontWeight: 800,
                     letterSpacing: "-0.04em",
