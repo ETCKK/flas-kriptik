@@ -1,25 +1,7 @@
 export default function Header({ text }: { text: string }) {
     return (
-        <header
-            style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                justifyContent: "center",
-                textAlign: "center",
-                padding: "6rem 1.5rem 7rem",
-            }}
-        >
-            <h1
-                style={{
-                    margin: 0,
-                    color: "#29324d",
-                    fontSize: "clamp(2.5rem, 6vw, 4.5rem)",
-                    fontWeight: 800,
-                    letterSpacing: "-0.04em",
-                    lineHeight: 1.1,
-                }}
-            >
+        <header className="relative z-0 flex flex-col items-center justify-center px-6 pb-16 pt-10 text-center md:py-24">
+            <h1 className="m-0 text-4xl font-extrabold leading-tight tracking-tight text-[#f2a65a] md:text-5xl lg:text-6xl">
                 {text}
             </h1>
         </header>

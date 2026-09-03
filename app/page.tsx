@@ -1,9 +1,8 @@
-import Header from "../components/Header";
-
+import Construction from "@/components/Construction";
 export default function Home() {
     return (
         <main>
-            <Header text="Flaş Kriptik" />
+            <Construction description="Ana sayfa" />
         </main>
     );
 }

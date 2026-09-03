@@ -3,7 +3,7 @@ import Construction from "@/components/Construction";
 export default function Puzzle(){
     return (
         <main>
-            <Construction />
+            <Construction description="Bulmaca sayfası" />
         </main>
     );
 }

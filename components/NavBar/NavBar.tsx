@@ -1,28 +1,56 @@
 import Link from "next/link";
 import NavLink from "./NavLink";
-import ProfileMenu from "./ProfileMenu";
+import MobileNavMenu from "./MobileNavMenu";
+import SettingsMenu from "./SettingsMenu";
+import { navItems } from "./navItems";
+import Logo from "@/components/icons/Logo";
+import ProfileIcon from "@/components/icons/ProfileIcon";
 
 export default function NavBar() {
     return (
-        <nav className="border-b border-[#f2d9d0] bg-[#fffdfb] shadow-[0_4px_20px_rgba(190,128,111,0.08)]">
-            <div className="mx-auto grid h-16 max-w-6xl grid-cols-3 items-center px-4">
-                <div className="justify-self-start">
+        <nav className="fixed inset-x-3 top-3 z-40 w-[calc(100%-1.5rem)] border-2 border-[#29324d] bg-[#29324d] text-[#fffaf5] shadow-[6px_6px_0_#df6f61] md:inset-x-auto md:left-1/2 md:w-fit md:-translate-x-1/2">
+            <div className="relative grid h-[4.25rem] grid-cols-[auto_1fr_auto] items-center gap-3 px-3 md:static md:grid-cols-[auto_auto_auto] md:gap-6 md:px-5">
+                <div className="justify-self-start md:pr-2">
+                    <MobileNavMenu />
                     <Link
                         href="/"
-                        className="text-2xl font-bold tracking-tight text-[#29324d] transition-colors hover:text-[#df6f61]"
+                        className="group hidden items-center gap-3 text-xl font-black tracking-[-0.04em] text-[#fffaf5] transition-colors hover:text-[#f2a65a] md:flex md:text-2xl"
                     >
-                        Flaş Kriptik
+                        <span className="h-8 w-8 shrink-0 rotate-[-8deg] transition-transform group-hover:rotate-0">
+                            <Logo />
+                        </span>
+                        flaş kriptik
                     </Link>
                 </div>
 
-                <div className="flex h-full items-center justify-center">
-                    <NavLink href="/bulmaca">Bulmaca</NavLink>
-                    <NavLink href="/ogren">Öğren</NavLink>
-                    <NavLink href="/arsiv">Arşiv</NavLink>
+                <div className="absolute left-1/2 -translate-x-1/2 md:hidden">
+                    <Link href="/" className="group flex items-center gap-2 whitespace-nowrap text-xl font-black tracking-[-0.04em] text-[#fffaf5]">
+                        <span className="h-7 w-7 shrink-0 rotate-[-8deg] transition-transform group-hover:rotate-0">
+                            <Logo />
+                        </span>
+                        flaş kriptik
+                    </Link>
                 </div>
 
-                <div className="justify-self-end">
-                    <ProfileMenu />
+                <div className="hidden h-full items-center justify-center px-2 md:flex">
+                    {navItems.map(({ href, label }) => (
+                        <NavLink key={href} href={href}>
+                            {label}
+                        </NavLink>
+                    ))}
+                </div>
+
+                <div className="flex items-center justify-self-end text-[#fffaf5]">
+                    <SettingsMenu />
+                    <Link
+                        href="/profil"
+                        aria-label="Profil"
+                        className="flex h-10 w-10 touch-manipulation items-center justify-center text-[#f2a65a] transition-colors duration-200 hover:bg-[#f2a65a] hover:text-[#29324d]"
+                    >
+                        <span className="h-6 w-6">
+                            <ProfileIcon />
+                        </span>
+                    </Link>
                 </div>
             </div>
         </nav>

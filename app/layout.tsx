@@ -1,5 +1,5 @@
 import "./globals.css";
-import NavBar from "../components/NavBar/NavBar";
+import NavBar from "@/components/NavBar/NavBar";
 
 export default function RootLayout({
     children,
@@ -8,7 +8,7 @@ export default function RootLayout({
 }) {
     return (
         <html lang="tr">
-            <body>
+            <body className="pt-24">
                 <NavBar />
                 {children}
             </body>
