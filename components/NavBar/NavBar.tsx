@@ -8,7 +8,7 @@ import ProfileIcon from "@/components/icons/ProfileIcon";
 
 export default function NavBar() {
     return (
-        <nav className="fixed inset-x-3 top-3 z-40 w-[calc(100%-1.5rem)] border-2 border-[#29324d] bg-[#29324d] text-[#fffaf5] shadow-[6px_6px_0_#df6f61] md:inset-x-auto md:left-1/2 md:w-fit md:-translate-x-1/2">
+        <nav className="fixed inset-x-3 top-3 z-40 border-2 border-[#29324d] bg-[#29324d] text-[#fffaf5] shadow-[6px_6px_0_#df6f61] md:inset-x-auto md:left-1/2 md:w-fit md:-translate-x-1/2">
             <div className="relative grid h-[4.25rem] grid-cols-[auto_1fr_auto] items-center gap-3 px-3 md:static md:grid-cols-[auto_auto_auto] md:gap-6 md:px-5">
                 <div className="justify-self-start md:pr-2">
                     <MobileNavMenu />
@@ -40,14 +40,14 @@ export default function NavBar() {
                     ))}
                 </div>
 
-                <div className="flex items-center justify-self-end text-[#fffaf5]">
+                <div className="col-start-3 flex items-center justify-self-end text-[#fffaf5]">
                     <SettingsMenu />
                     <Link
                         href="/profil"
                         aria-label="Profil"
                         className="flex h-10 w-10 touch-manipulation items-center justify-center text-[#f2a65a] transition-colors duration-200 hover:bg-[#f2a65a] hover:text-[#29324d]"
                     >
-                        <span className="h-6 w-6">
+                        <span className="h-7 w-7">
                             <ProfileIcon />
                         </span>
                     </Link>
