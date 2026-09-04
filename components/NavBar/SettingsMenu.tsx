@@ -29,7 +29,7 @@ export default function SettingsMenu() {
                 type="button"
                 aria-label="Ayarlar"
                 onClick={() => setIsOpen(true)}
-                className="group flex h-10 w-10 cursor-pointer touch-manipulation items-center justify-center text-accent transition-colors duration-200 hover:bg-accent hover:text-surface"
+                className="group flex h-10 w-10 rounded-xs cursor-pointer touch-manipulation items-center justify-center text-accent transition-colors duration-100 hover:bg-accent hover:text-surface"
             >
                 <span className={`h-5 w-5 text-ink transition-transform duration-200 ${isOpen ? 'rotate-45' : 'group-hover:rotate-45'}`}>
                     <GearIcon />
@@ -45,7 +45,7 @@ export default function SettingsMenu() {
                 >
                     
                     <div 
-                        className={`absolute inset-0 transition-all duration-200 ${
+                        className={`absolute inset-0 transition-all duration-100 ${
                             isOpen
                                 ? "bg-canvas/70 opacity-100 backdrop-blur-sm"
                                 : "bg-canvas/0 opacity-0 backdrop-blur-0"
@@ -54,7 +54,7 @@ export default function SettingsMenu() {
                     />
                     
                     <div
-                        className={`relative w-full max-w-sm origin-top border-2 border-accent bg-surface p-6 text-ink shadow-[6px_6px_0_var(--color-accent)] transition-all duration-200 ease-out ${
+                        className={`relative w-full max-w-sm origin-top rounded-sm border-2 border-accent bg-surface p-6 text-ink shadow-[6px_6px_0_var(--color-accent)] transition-all duration-100 ease-out ${
                             isOpen ? "translate-y-0 opacity-100" : "-translate-y-2 opacity-0"
                         }`}
                     >

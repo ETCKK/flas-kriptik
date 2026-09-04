@@ -53,7 +53,7 @@ export default function MobileNavMenu() {
                     event.preventDefault();
                     isOpen ? closeMenu() : openMenu();
                 }}
-                className={`flex h-11 w-11 cursor-pointer list-none touch-manipulation items-center justify-center border-2 border-accent text-accent transition-[background-color,color] duration-200 hover:bg-accent hover:text-surface [&::-webkit-details-marker]:hidden ${isOpen ? "bg-accent text-surface" : ""}`}
+                className={`flex h-10 w-10 rounded-xs cursor-pointer list-none touch-manipulation items-center justify-center border-2 border-accent text-accent transition-[background-color,color] duration-100 hover:bg-accent hover:text-surface [&::-webkit-details-marker]:hidden ${isOpen ? "bg-accent text-surface" : ""}`}
             >
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -61,7 +61,7 @@ export default function MobileNavMenu() {
                     fill="none"
                     stroke="currentColor"
                     strokeWidth="2"
-                    className={`h-6 w-6 transition-colors duration-200 ${isOpen ? "text-surface" : "text-accent group-hover:text-surface"}`}
+                    className={`h-6 w-6 transition-colors duration-100 ${isOpen ? "text-surface" : "text-accent group-hover:text-surface"}`}
                     aria-hidden="true"
                 >
                     <path d="M4 6h16M4 12h16M4 18h16" />
@@ -70,7 +70,7 @@ export default function MobileNavMenu() {
 
             {isMounted && <div
                 id="mobile-navigation"
-                className={`absolute left-0 top-full z-50 mt-3 w-56 origin-top border-2 border-accent bg-surface p-2 text-ink shadow-[5px_5px_0_var(--color-accent)] transition-all duration-200 ${isOpen ? "translate-y-0 opacity-100" : "-translate-y-2 opacity-0"}`}
+                className={`absolute left-0 top-full z-50 mt-3 flex w-56 origin-top flex-col gap-1 rounded-sm border-2 border-accent bg-surface p-2 text-ink shadow-[5px_5px_0_var(--color-accent)] transition-all duration-100 ${isOpen ? "translate-y-0 opacity-100" : "-translate-y-2 opacity-0"}`}
             >
                     {navItems.map(({ href, label }) => {
                         const isActive = pathname === href;
@@ -80,7 +80,7 @@ export default function MobileNavMenu() {
                                 href={href}
                                 aria-current={isActive ? "page" : undefined}
                                 onClick={closeMenu}
-                                className={`block px-3 py-2 text-sm font-semibold transition-colors ${
+                                className={`block rounded-xs px-3 py-2 text-sm font-semibold transition-colors ${
                                     isActive
                                         ? "bg-accent !text-surface"
                                         : "!text-ink hover:bg-accent hover:!text-surface"

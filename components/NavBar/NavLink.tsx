@@ -15,7 +15,7 @@ export default function NavLink({ href, children }: NavLinkProps) {
         <Link
             href={href}
             aria-current={isActive ? "page" : undefined}
-            className={`relative flex h-full items-center justify-center px-4 text-sm text-center font-bold uppercase tracking-[0.08em] transition-colors duration-200 ${
+            className={`relative flex h-full items-center justify-center px-4 text-sm text-center font-bold uppercase tracking-[0.08em] transition-colors duration-100 ${
                 isActive
                     ? "text-accent"
                     : "text-muted hover:text-ink"
@@ -23,7 +23,7 @@ export default function NavLink({ href, children }: NavLinkProps) {
         >
             {children}
             {isActive && (
-                <span className="absolute bottom-2 left-4 right-4 h-1 bg-accent" />
+                <span className="absolute rounded-xs bottom-2 left-4 right-4 h-1 bg-accent" />
             )}
         </Link>
     );
