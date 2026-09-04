@@ -1,6 +1,6 @@
 import Construction from "@/components/Construction";
 
-export default function Learn(){
+export default function LearnPage(){
     return (
         <main>
             <Construction description="Öğrenme sayfası" />
