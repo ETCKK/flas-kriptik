@@ -17,13 +17,13 @@ export default function NavLink({ href, children }: NavLinkProps) {
             aria-current={isActive ? "page" : undefined}
             className={`relative flex h-full items-center justify-center px-4 text-sm text-center font-bold uppercase tracking-[0.08em] transition-colors duration-200 ${
                 isActive
-                    ? "text-[#f2a65a]"
-                    : "text-[#c5c9d5] hover:text-[#fffaf5]"
+                    ? "text-accent"
+                    : "text-muted hover:text-ink"
             }`}
         >
             {children}
             {isActive && (
-                <span className="absolute bottom-2 left-4 right-4 h-1 bg-[#f2a65a]" />
+                <span className="absolute bottom-2 left-4 right-4 h-1 bg-accent" />
             )}
         </Link>
     );

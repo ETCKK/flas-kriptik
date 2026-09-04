@@ -29,9 +29,9 @@ export default function SettingsMenu() {
                 type="button"
                 aria-label="Ayarlar"
                 onClick={() => setIsOpen(true)}
-                className="group flex h-10 w-10 touch-manipulation items-center justify-center text-[#f2a65a] transition-colors duration-200 hover:bg-[#f2a65a] hover:text-[#29324d]"
+                className="group flex h-10 w-10 cursor-pointer touch-manipulation items-center justify-center text-accent transition-colors duration-200 hover:bg-accent hover:text-surface"
             >
-                <span className={`h-5 w-5 transition-transform duration-200 ${isOpen ? 'rotate-45' : 'group-hover:rotate-45'}`}>
+                <span className={`h-5 w-5 text-ink transition-transform duration-200 ${isOpen ? 'rotate-45' : 'group-hover:rotate-45'}`}>
                     <GearIcon />
                 </span>
             </button>
@@ -47,14 +47,14 @@ export default function SettingsMenu() {
                     <div 
                         className={`absolute inset-0 transition-all duration-200 ${
                             isOpen
-                                ? "bg-[#101722]/70 opacity-100 backdrop-blur-sm"
-                                : "bg-[#101722]/0 opacity-0 backdrop-blur-0"
+                                ? "bg-canvas/70 opacity-100 backdrop-blur-sm"
+                                : "bg-canvas/0 opacity-0 backdrop-blur-0"
                         }`}
                         onClick={() => setIsOpen(false)}
                     />
                     
                     <div
-                        className={`relative w-full max-w-sm origin-top border-2 border-[#f2a65a] bg-[#29324d] p-6 text-[#fffaf5] shadow-[6px_6px_0_#f2a65a] transition-all duration-200 ease-out ${
+                        className={`relative w-full max-w-sm origin-top border-2 border-accent bg-surface p-6 text-ink shadow-[6px_6px_0_var(--color-accent)] transition-all duration-200 ease-out ${
                             isOpen ? "translate-y-0 opacity-100" : "-translate-y-2 opacity-0"
                         }`}
                     >
@@ -68,12 +68,12 @@ export default function SettingsMenu() {
                                 type="button"
                                 aria-label="Ayarları kapat"
                                 onClick={() => setIsOpen(false)}
-                                className="flex h-12 w-12 items-center justify-center text-4xl leading-none text-[#f2a65a] hover:text-[#fffaf5]"
+                                className="flex h-12 w-12 items-center justify-center text-4xl leading-none text-accent hover:text-ink"
                             >
                                 &times;
                             </button>
                         </div>
-                        <p className="mt-6 border-t border-[#59617d] pt-4 text-sm text-[#c5c9d5]">
+                        <p className="mt-6 border-t border-divider pt-4 text-sm text-muted">
                             Yapım aşamasında.
                         </p>
                     </div>

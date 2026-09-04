@@ -1,5 +1,15 @@
 @import "tailwindcss";
 
+@theme {
+	--color-canvas: #101722;
+	--color-surface: #29324d;
+	--color-accent: #f2a65a;
+	--color-ink: #fffaf5;
+	--color-muted: #c5c9d5;
+	--color-divider: #59617d;
+	--color-shadow: #df6f61;
+}
+
 * {
 	box-sizing: border-box;
 }
@@ -14,8 +24,8 @@ body {
 body {
 	font-family: Arial, Helvetica, sans-serif;
 	line-height: 1.5;
-	color: #fffaf5;
-	background: #101722;
+	color: var(--color-ink);
+	background: var(--color-canvas);
 	-webkit-font-smoothing: antialiased;
 }
 
