@@ -3,6 +3,6 @@ export default interface Puzzle {
     date: string;
     clue: string;
     length: number;
-    hints: string[];
+    hints?: string[];
     difficulty?: "Kolay" | "Orta" | "Zor";
 };

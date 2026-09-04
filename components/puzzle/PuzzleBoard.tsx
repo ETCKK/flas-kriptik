@@ -12,7 +12,7 @@ export default function PuzzleBoard({ puzzle }: { puzzle: Puzzle }) {
     const addLetter = (letter: string) => {
         setLetters((current) => {
             const next = [...current];
-                next[activeIndex] = letter.toLocaleLowerCase("tr-TR");
+            next[activeIndex] = letter.toLocaleLowerCase("tr-TR");
             return next;
         });
         setActiveIndex((current) => Math.min(current + 1, puzzle.length - 1));
