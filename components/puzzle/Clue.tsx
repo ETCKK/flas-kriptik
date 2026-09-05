@@ -1,4 +1,4 @@
-import Puzzle from "@/types/puzzle";
+import type { Puzzle } from "@/types";
 
 export default function Clue({ puzzle }: { puzzle: Puzzle }) {
     return (
