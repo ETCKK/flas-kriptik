@@ -1,6 +1,6 @@
-import type { Puzzle } from "@/types";
+import type { Clue } from "@/types";
 
-export const puzzle: Puzzle = {
+export const clue: Clue = {
     id: "001",
     date: "01.09.2026",
     clue: "Karışık kuruyemişe kafasızca koyulan engel?",

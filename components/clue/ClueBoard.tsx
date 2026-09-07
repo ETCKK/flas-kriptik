@@ -1,12 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import type { Puzzle } from "@/types";
+import type { Clue } from "@/types";
 import AnswerGrid from "./AnswerGrid";
 import Keyboard from "./Keyboard";
 
-export default function PuzzleBoard({ puzzle }: { puzzle: Puzzle }) {
-    const [letters, setLetters] = useState(() => Array(puzzle.length).fill(""));
+export default function ClueBoard({ clue }: { clue: Clue }) {
+    const [letters, setLetters] = useState(() => Array(clue.length).fill(""));
     const [activeIndex, setActiveIndex] = useState(0);
 
     const updateLetter = (letter: string, direction: -1 | 1) => {
@@ -16,7 +16,7 @@ export default function PuzzleBoard({ puzzle }: { puzzle: Puzzle }) {
             return next;
         });
         setActiveIndex((current) =>
-            Math.max(0, Math.min(current + direction, puzzle.length - 1)),
+            Math.max(0, Math.min(current + direction, clue.length - 1)),
         );
     };
 
@@ -34,7 +34,7 @@ export default function PuzzleBoard({ puzzle }: { puzzle: Puzzle }) {
                         0,
                         Math.min(
                             current + (event.key === "ArrowLeft" ? -1 : 1),
-                            puzzle.length - 1,
+                            clue.length - 1,
                         ),
                     ),
                 );
