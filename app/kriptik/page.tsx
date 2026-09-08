@@ -1,5 +1,5 @@
-import Clue from "@/components/cryptic/Clue";
-import CrypticBoard from "@/components/cryptic/CrypticBoard";
+import Clue from "@/components/Cryptic/Clue";
+import CrypticBoard from "@/components/Cryptic/CrypticBoard";
 import { getPublicCrypticById } from "@/lib/cryptic";
 import { notFound } from "next/navigation";
 
