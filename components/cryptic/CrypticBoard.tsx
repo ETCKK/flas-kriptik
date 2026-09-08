@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import type { PublicCryptic } from "@/types";
 import { useGameStore } from "@/store/useGameStore";
 import { submitAnswer, fetchHintByIndex } from "@/actions/cryptic";
+import Button from "@/components/ui/Button";
 import AnswerGrid from "./AnswerGrid";
 import Keyboard from "./Keyboard";
 
@@ -57,6 +58,9 @@ export default function CrypticBoard({ cryptic }: { cryptic: PublicCryptic }) {
     return (
         <div className="space-y-8">
             <AnswerGrid letters={letters} cursorIndex={cursorIndex} onSelect={setCursorIndex} />
+            <div className="flex justify-center">
+                <Button variant="clicky">Gönder</Button>
+            </div>
             <Keyboard onKey={addLetter} onBackspace={removeLetter} />
         </div>
     );
