@@ -12,11 +12,11 @@ export default function CrypticBoard({ cryptic }: { cryptic: PublicCryptic }) {
     const [cursorIndex, setCursorIndex] = useState(0);
     const [isChecking, setIsChecking] = useState(false);
 
-    const { status, unlockedHints, initClue, unlockHint, setWon } = useGameStore();
+    const { status, unlockedHints, initCryptic, unlockHint, setWon } = useGameStore();
 
     useEffect(() => {
-        initClue(cryptic.id);
-    }, [cryptic.id, initClue]);
+        initCryptic(cryptic.id);
+    }, [cryptic.id, initCryptic]);
 
     const isWon = status === "won";
 

@@ -5,7 +5,7 @@ interface GameStore {
     status: GameStatus;
     unlockedHints: number[];
     
-    initClue: (id: string) => void;
+    initCryptic: (id: string) => void;
     unlockHint: (index: number) => void;
     setWon: () => void;
 }

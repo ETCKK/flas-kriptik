@@ -9,7 +9,7 @@ export const useGameStore = create<GameStore>()(
             status: "playing",
             unlockedHints: [],
 
-            initClue: (id) => set((state) => {
+            initCryptic: (id) => set((state) => {
                 if (state.crypticId !== id) {
                     return { crypticId: id, status: "playing", unlockedHints: [] };
                 }
