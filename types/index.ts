@@ -1,2 +1,2 @@
 export type { Hint, HintType } from "./hint";
-export type { Clue, ClueDifficulty } from "./clue";
+export type { Clue, PublicClue, ClueDifficulty } from "./clue";

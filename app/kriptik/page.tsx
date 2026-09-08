@@ -1,9 +1,8 @@
 import Clue from "@/components/clue/Clue";
 import ClueBoard from "@/components/clue/ClueBoard";
-import { getTodaysClue } from "@/data/clue/repository";
+import { clue } from "@/data/clue/exampleClue";
 
 export default async function CluePage() {
-    const clue = await getTodaysClue();
 
     return (
         <main className="min-h-[calc(100vh-6rem)] bg-canvas px-2 pb-52 pt-28 sm:px-6 sm:pb-48 sm:pt-32">
