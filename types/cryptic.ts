@@ -1,17 +1,17 @@
 import type { Hint } from "./hint";
 
-type ClueDifficulty = "Kolay" | "Orta" | "Zor";
+type CrypticDifficulty = "Kolay" | "Orta" | "Zor";
 
-interface PublicClue {
+interface PublicCryptic {
     id: string;
     date: string;
     clue: string;
     length: number;
     author: string;
-    difficulty?: ClueDifficulty;
+    difficulty?: CrypticDifficulty;
 }
 
-interface Clue extends PublicClue {
+interface Cryptic extends PublicCryptic {
     answer: string;
     hints?: Hint[];
     explanation?: string;
@@ -21,4 +21,4 @@ interface Clue extends PublicClue {
     fodders?: string[];
 }
 
-export type { Clue, PublicClue, ClueDifficulty };
+export type { Cryptic, PublicCryptic, CrypticDifficulty };

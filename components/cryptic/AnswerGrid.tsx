@@ -2,11 +2,11 @@ import LetterBox from "./LetterBox";
 
 export default function AnswerGrid({
     letters,
-    activeIndex,
+    cursorIndex: activeIndex,
     onSelect,
 }: {
     letters: string[];
-    activeIndex: number;
+    cursorIndex: number;
     onSelect: (index: number) => void;
 }) {
     return (

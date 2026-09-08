@@ -1,6 +1,6 @@
-import type { Clue } from "@/types";
+import type { Cryptic } from "@/types";
 
-export const clue: Clue = {
+export const cryptic: Cryptic = {
     id: "001",
     date: "GG.AA.YYYY",
     clue: "Örnek bir kriptik metni.",

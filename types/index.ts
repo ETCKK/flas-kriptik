@@ -1,2 +1,3 @@
 export type { Hint, HintType } from "./hint";
-export type { Clue, PublicClue, ClueDifficulty } from "./clue";
+export type { Cryptic, PublicCryptic, CrypticDifficulty } from "./cryptic";
+export type { GameStore, GameStatus } from "./game";
