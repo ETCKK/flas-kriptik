@@ -34,10 +34,11 @@ export default function CrypticBoard({ cryptic }: { cryptic: PublicCryptic }) {
         if (isWon) return;
         setLetters((curr) => {
             const next = [...curr];
-            next[cursorIndex] = "";
+            const targetIndex = next[cursorIndex] ? cursorIndex : Math.max(0, cursorIndex - 1);
+            next[targetIndex] = "";
             return next;
         });
-        setCursorIndex((curr) => Math.max(0, curr - 1));
+        setCursorIndex((curr) => (letters[curr] ? curr : Math.max(0, curr - 1)));
     };
 
     useEffect(() => {
