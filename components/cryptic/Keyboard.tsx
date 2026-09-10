@@ -1,40 +1,36 @@
+import Button from "@/components/ui/Button";
+
 const keyboardRows = [
     ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P", "Ğ", "Ü"],
     ["A", "S", "D", "F", "G", "H", "J", "K", "L", "Ş", "İ"],
-    ["Z", "X", "C", "V", "B", "N", "M", "Ö", "Ç"],
+    ["Z", "X", "C", "V", "B", "N", "M", "Ö", "Ç"]
 ];
 
-export default function Keyboard({
-    onKey,
-    onBackspace,
-}: {
-    onKey: (key: string) => void;
-    onBackspace: () => void;
-}) {
+export default function Keyboard({ onKey, onBackspace }: { onKey: (key: string) => void; onBackspace: () => void; }) {
     return (
-        <div className="fixed inset-x-0 bottom-0 z-30 border-t-2 border-divider bg-canvas px-3 py-3 sm:px-6 sm:py-4" aria-label="Ekran klavyesi">
-            <div className="mx-auto max-w-2xl space-y-2.5">
-                {keyboardRows.map((row) => (
-                    <div key={row[0]} className="flex justify-center gap-1.5 sm:gap-2">
+        <div className="fixed bottom-0 left-1/2 z-50 w-full max-w-2xl -translate-x-1/2 animate-[slideUpTw_0.5s_ease-out_forwards] border-t-4 border-[#111] bg-[var(--color-tw-bg)] shadow-[0_-10px_40px_rgba(0,0,0,0.8)] pb-safe sm:rounded-t-xl sm:border-x-4">
+            <div className="mx-auto flex w-full flex-col items-center space-y-2 px-1 py-3 sm:space-y-4 sm:px-6 sm:py-5">
+                {keyboardRows.map((row, rowIndex) => (
+                    <div key={row[0]} className="flex w-full justify-center gap-1 sm:gap-2.5">
                         {row.map((key) => (
-                            <button
+                            <Button
                                 key={key}
                                 type="button"
+                                variant="keyboard"
                                 onClick={() => onKey(key)}
-                                className="h-11 min-w-0 flex-1 rounded-sm border-b-4 border-divider bg-surface px-0.5 text-sm font-bold text-ink transition-all duration-50 active:translate-y-1 active:border-b-0 sm:h-12 sm:px-1 sm:text-base sm:max-w-12"
                             >
                                 {key}
-                            </button>
+                            </Button>
                         ))}
-                        {row === keyboardRows[2] && (
-                            <button
+                        {rowIndex === 2 && (
+                            <Button
                                 type="button"
-                                aria-label="Son harfi sil"
+                                aria-label="Sil"
+                                variant="delete"
                                 onClick={onBackspace}
-                                className="h-11 min-w-12 rounded-sm border-b-4 border-shadow bg-danger px-1 text-base font-black text-ink transition-all duration-50 active:translate-y-1 active:border-b-0 sm:h-12 sm:min-w-16 sm:px-2 sm:text-lg"
                             >
                                 ⌫
-                            </button>
+                            </Button>
                         )}
                     </div>
                 ))}

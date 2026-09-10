@@ -3,7 +3,7 @@ import { persist } from "zustand/middleware";
 import type { CrypticGame, GameStore } from "@/types/game";
 
 const createInitialGameState = (): CrypticGame => ({
-    status: "playing",
+    status: "idle",
     unlockedHints: [],
 });
 
@@ -24,13 +24,24 @@ export const useGameStore = create<GameStore>()(
                 return state;
             }),
 
+            startPlaying: (id) => set((state) => {
+                const game = state.games[id];
+                if (game?.status === "idle") {
+                    return {
+                        games: {
+                            ...state.games,
+                            [id]: { ...game, status: "playing" },
+                        },
+                    };
+                }
+                return state;
+            }),
+
             unlockHint: (id, index) => set((state) => {
                 const game = state.games[id] ?? createInitialGameState();
-
                 if (game.unlockedHints.includes(index)) {
                     return state;
                 }
-
                 return {
                     games: {
                         ...state.games,
@@ -42,12 +53,13 @@ export const useGameStore = create<GameStore>()(
                 };
             }),
 
-            setWon: (id) => set((state) => ({
+            setWon: (id, answer) => set((state) => ({
                 games: {
                     ...state.games,
                     [id]: {
                         ...(state.games[id] ?? createInitialGameState()),
                         status: "won",
+                        answer,
                     },
                 },
             })),

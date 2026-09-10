@@ -1,72 +1,73 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import type { PublicCryptic } from "@/types";
 import { useGameStore } from "@/store/useGameStore";
-import { submitAnswer, fetchHintByIndex } from "@/actions/cryptic";
-import Button from "@/components/ui/Button";
-import AnswerGrid from "./AnswerGrid";
+import { submitAnswer } from "@/actions/cryptic";
+import { useCrypticInput } from "./hooks/useCrypticInput";
+import { useCrypticPhase } from "./hooks/useCrypticPhase";
+import { useMounted } from "@/hooks/useMounted";
+
+import Envelope from "./stages/Envelope";
+import Paper from "./stages/Paper";
 import Keyboard from "./Keyboard";
 
 export default function CrypticBoard({ cryptic }: { cryptic: PublicCryptic }) {
-    const [letters, setLetters] = useState<string[]>(() => Array(cryptic.length).fill(""));
-    const [cursorIndex, setCursorIndex] = useState(0);
+    const { games, initCryptic, startPlaying, setWon } = useGameStore();
+    const game = games[cryptic.id];
+    const isMounted = useMounted();
     const [isChecking, setIsChecking] = useState(false);
 
-    const game = useGameStore((state) => state.games[cryptic.id]);
-    const initCryptic = useGameStore((state) => state.initCryptic);
+    useEffect(() => { initCryptic(cryptic.id); }, [cryptic.id, initCryptic]);
+
+    const status = isMounted ? (game?.status ?? "idle") : "idle";
+    const isWon = status === "won";
+
+    const { phase, breakSeal } = useCrypticPhase({
+        isMounted,
+        status,
+        onStart: () => startPlaying(cryptic.id),
+    });
+
+    const { letters, cursorIndex, setLetters, setCursorIndex, addLetter, removeLetter } = useCrypticInput({
+        length: cryptic.length,
+        disabled: isWon || phase !== "playing",
+        onSubmit: handleSubmit,
+    });
+    const isComplete = !letters.includes("");
 
     useEffect(() => {
-        initCryptic(cryptic.id);
-    }, [cryptic.id, initCryptic]);
+        if (isWon && game?.answer && letters.includes("")) {
+            setLetters(game.answer.split(""));
+        }
+    }, [game?.answer, isWon, letters, setLetters]);
 
-    const isWon = game?.status === "won";
-    const canSubmit = !letters.includes("") && !isChecking && !isWon;
-
-    const addLetter = (key: string) => {
-        if (isWon) return;
-        setLetters((curr) => {
-            const next = [...curr];
-            next[cursorIndex] = key.toLocaleLowerCase("tr-TR");
-            return next;
+    function handleSubmit() {
+        if (isChecking || !isComplete || isWon) return;
+        setIsChecking(true);
+        const answer = letters.join("");
+        submitAnswer(cryptic.id, answer).then((isCorrect) => {
+            if (isCorrect) setWon(cryptic.id, answer);
+            setIsChecking(false);
         });
-        setCursorIndex((curr) => Math.min(curr + 1, cryptic.length - 1));
-    };
+    }
 
-    const removeLetter = () => {
-        if (isWon) return;
-        setLetters((curr) => {
-            const next = [...curr];
-            const targetIndex = next[cursorIndex] ? cursorIndex : Math.max(0, cursorIndex - 1);
-            next[targetIndex] = "";
-            return next;
-        });
-        setCursorIndex((curr) => (letters[curr] ? curr : Math.max(0, curr - 1)));
-    };
-
-    useEffect(() => {
-        const handleKeyDown = (e: KeyboardEvent) => {
-            if (isWon) return;
-            if (e.key === "Backspace") removeLetter();
-            else if (e.key === "ArrowLeft") setCursorIndex((i) => Math.max(0, i - 1));
-            else if (e.key === "ArrowRight") setCursorIndex((i) => Math.min(i + 1, cryptic.length - 1));
-            else if (/^[a-zA-ZğüşıöçĞÜŞİÖÇ]$/.test(e.key)) addLetter(e.key);
-        };
-
-        window.addEventListener("keydown", handleKeyDown);
-        return () => window.removeEventListener("keydown", handleKeyDown);
-    }, [cursorIndex, letters, isWon]);
+    if (!isMounted) return <div className="min-h-[50vh]" />;
 
     return (
-        <div className="space-y-8">
-            <AnswerGrid letters={letters} cursorIndex={cursorIndex} onSelect={setCursorIndex} />
-            <div className="flex justify-center gap-4">
-                <Button>İpucu Al</Button>
-                <Button disabled={!canSubmit}>
-                    Gönder
-                </Button>
+        <div className={`relative flex w-full flex-col items-center ${phase === "playing" && !isWon ? "pb-52 sm:pb-64" : ""}`}>
+            <div className="relative w-full max-w-2xl perspective-[1200px]">
+                <Paper
+                    cryptic={cryptic} phase={phase} letters={letters}
+                    cursorIndex={cursorIndex} setCursorIndex={setCursorIndex}
+                    isChecking={isChecking} isComplete={isComplete} isWon={isWon} handleSubmit={handleSubmit}
+                />
+                <Envelope phase={phase} onBreakSeal={breakSeal} />
             </div>
-            <Keyboard onKey={addLetter} onBackspace={removeLetter} />
+
+            {phase === "playing" && !isWon && (
+                <Keyboard onKey={addLetter} onBackspace={removeLetter} />
+            )}
         </div>
     );
 }
