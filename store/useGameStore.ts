@@ -1,28 +1,56 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import type { GameStore, GameStatus } from "@/types/game";
+import type { CrypticGame, GameStore } from "@/types/game";
+
+const createInitialGameState = (): CrypticGame => ({
+    status: "playing",
+    unlockedHints: [],
+});
 
 export const useGameStore = create<GameStore>()(
     persist(
         (set) => ({
-            crypticId: null,
-            status: "playing",
-            unlockedHints: [],
+            games: {},
 
             initCryptic: (id) => set((state) => {
-                if (state.crypticId !== id) {
-                    return { crypticId: id, status: "playing", unlockedHints: [] };
+                if (!state.games[id]) {
+                    return {
+                        games: {
+                            ...state.games,
+                            [id]: createInitialGameState(),
+                        },
+                    };
                 }
                 return state;
             }),
 
-            unlockHint: (index) => set((state) => ({
-                unlockedHints: state.unlockedHints.includes(index)
-                    ? state.unlockedHints
-                    : [...state.unlockedHints, index],
-            })),
+            unlockHint: (id, index) => set((state) => {
+                const game = state.games[id] ?? createInitialGameState();
 
-            setWon: () => set({ status: "won" }),
+                if (game.unlockedHints.includes(index)) {
+                    return state;
+                }
+
+                return {
+                    games: {
+                        ...state.games,
+                        [id]: {
+                            ...game,
+                            unlockedHints: [...game.unlockedHints, index],
+                        },
+                    },
+                };
+            }),
+
+            setWon: (id) => set((state) => ({
+                games: {
+                    ...state.games,
+                    [id]: {
+                        ...(state.games[id] ?? createInitialGameState()),
+                        status: "won",
+                    },
+                },
+            })),
         }),
         { name: "flas-kriptik-game" }
     )

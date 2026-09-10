@@ -13,13 +13,15 @@ export default function CrypticBoard({ cryptic }: { cryptic: PublicCryptic }) {
     const [cursorIndex, setCursorIndex] = useState(0);
     const [isChecking, setIsChecking] = useState(false);
 
-    const { status, unlockedHints, initCryptic, unlockHint, setWon } = useGameStore();
+    const game = useGameStore((state) => state.games[cryptic.id]);
+    const initCryptic = useGameStore((state) => state.initCryptic);
 
     useEffect(() => {
         initCryptic(cryptic.id);
     }, [cryptic.id, initCryptic]);
 
-    const isWon = status === "won";
+    const isWon = game?.status === "won";
+    const canSubmit = !letters.includes("") && !isChecking && !isWon;
 
     const addLetter = (key: string) => {
         if (isWon) return;
@@ -58,8 +60,11 @@ export default function CrypticBoard({ cryptic }: { cryptic: PublicCryptic }) {
     return (
         <div className="space-y-8">
             <AnswerGrid letters={letters} cursorIndex={cursorIndex} onSelect={setCursorIndex} />
-            <div className="flex justify-center">
-                <Button variant="clicky">Gönder</Button>
+            <div className="flex justify-center gap-4">
+                <Button>İpucu Al</Button>
+                <Button disabled={!canSubmit}>
+                    Gönder
+                </Button>
             </div>
             <Keyboard onKey={addLetter} onBackspace={removeLetter} />
         </div>

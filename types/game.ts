@@ -1,13 +1,16 @@
 type GameStatus = "playing" | "won";
 
-interface GameStore {
-    crypticId: string | null;
+interface CrypticGame {
     status: GameStatus;
     unlockedHints: number[];
-    
-    initCryptic: (id: string) => void;
-    unlockHint: (index: number) => void;
-    setWon: () => void;
 }
 
-export type { GameStore, GameStatus };
+interface GameStore {
+    games: Record<string, CrypticGame>;
+    
+    initCryptic: (id: string) => void;
+    unlockHint: (id: string, index: number) => void;
+    setWon: (id: string) => void;
+}
+
+export type { CrypticGame, GameStore, GameStatus };
