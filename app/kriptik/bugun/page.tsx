@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 
 export default async function TodaysCrypticPage() {
 
-    const cryptic = await getPublicCrypticById("001");
+    const cryptic = await getPublicCrypticById("e-001");
 
     if (!cryptic) {
         notFound();
