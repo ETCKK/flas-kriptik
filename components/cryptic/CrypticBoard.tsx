@@ -8,15 +8,17 @@ import { useCrypticInput } from "./hooks/useCrypticInput";
 import { useCrypticPhase } from "./hooks/useCrypticPhase";
 import { useMounted } from "@/hooks/useMounted";
 
-import Envelope from "./stages/Envelope";
-import Paper from "./stages/Paper";
+import Envelope from "./Envelope";
+import CrypticPaper, { type CrypticPage } from "./CrypticPaper";
 import Keyboard from "./Keyboard";
+import CluePage from "./pages/CluePage";
 
 export default function CrypticBoard({ cryptic }: { cryptic: PublicCryptic }) {
     const { games, initCryptic, startPlaying, setWon } = useGameStore();
     const game = games[cryptic.id];
     const isMounted = useMounted();
     const [isChecking, setIsChecking] = useState(false);
+    const [page, setPage] = useState<CrypticPage>("clue");
 
     useEffect(() => { initCryptic(cryptic.id); }, [cryptic.id, initCryptic]);
 
@@ -34,7 +36,7 @@ export default function CrypticBoard({ cryptic }: { cryptic: PublicCryptic }) {
         disabled: isWon || phase !== "playing",
         onSubmit: handleSubmit,
     });
-    const isComplete = !letters.includes("");
+    const canSubmit = !letters.includes("");
 
     useEffect(() => {
         if (isWon && game?.answer && letters.includes("")) {
@@ -43,7 +45,7 @@ export default function CrypticBoard({ cryptic }: { cryptic: PublicCryptic }) {
     }, [game?.answer, isWon, letters, setLetters]);
 
     function handleSubmit() {
-        if (isChecking || !isComplete || isWon) return;
+        if (isChecking || !canSubmit || isWon) return;
         setIsChecking(true);
         const answer = letters.join("");
         submitAnswer(cryptic.id, answer).then((isCorrect) => {
@@ -57,11 +59,21 @@ export default function CrypticBoard({ cryptic }: { cryptic: PublicCryptic }) {
     return (
         <div className={`relative flex w-full flex-col items-center ${phase === "playing" && !isWon ? "pb-52 sm:pb-64" : ""}`}>
             <div className="relative w-full max-w-2xl perspective-[1200px]">
-                <Paper
-                    cryptic={cryptic} phase={phase} letters={letters}
-                    cursorIndex={cursorIndex} setCursorIndex={setCursorIndex}
-                    isChecking={isChecking} isComplete={isComplete} isWon={isWon} handleSubmit={handleSubmit}
-                />
+                <CrypticPaper phase={phase} page={page} onPageChange={setPage}>
+                    {page === "clue" && (
+                        <CluePage
+                            cryptic={cryptic}
+                            phase={phase}
+                            letters={letters}
+                            cursorIndex={cursorIndex}
+                            setCursorIndex={setCursorIndex}
+                            isChecking={isChecking}
+                            canSubmit={canSubmit}
+                            isWon={isWon}
+                            handleSubmit={handleSubmit}
+                        />
+                    )}
+                </CrypticPaper>
                 <Envelope phase={phase} onBreakSeal={breakSeal} />
             </div>
 

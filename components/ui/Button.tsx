@@ -17,13 +17,13 @@ export default function Button({
     
     const variantClasses = {
         clicky: "rounded-sm bg-surface px-4 py-1.5 text-ink border-b-4 border-shadow active:translate-y-1 active:border-0 disabled:border-b-4 disabled:border-shadow disabled:translate-y-0 sm:px-6 sm:py-2",
-        paper: "border-b-4 border-[var(--color-paper-ink)] bg-transparent px-4 py-2 text-xs text-[var(--color-paper-ink)] hover:bg-[var(--color-paper-ink)] hover:text-[var(--color-paper)] active:bg-[var(--color-paper-ink)] active:text-[var(--color-paper)] disabled:bg-transparent disabled:hover:bg-transparent disabled:hover:text-[var(--color-paper-ink)] disabled:opacity-50 sm:px-6 sm:text-base",
-        paperSecondary: "border-b-4 border-[var(--color-paper-ink)]/40 bg-transparent px-3 py-2 text-xs text-[var(--color-paper-ink)]/70 hover:bg-[var(--color-divider)] hover:text-[var(--color-paper)] active:bg-[var(--color-divider)] active:text-[var(--color-paper)] disabled:bg-transparent disabled:hover:bg-transparent disabled:hover:text-[var(--color-paper-ink)]/70 disabled:opacity-100 sm:px-4 sm:text-base",
-        keyboard: "font-typewriter h-12 w-8 rounded-full border-2 border-[#111] bg-[var(--color-tw-key)] text-lg text-[#111] shadow-[0_4px_0_#111] transition-all active:translate-y-1 active:shadow-[0_0_0_#111] sm:h-14 sm:w-12 sm:text-xl",
-        delete: "font-typewriter h-12 w-14 rounded-full border-2 border-[#111] bg-[var(--color-stamp)] text-lg text-[var(--color-paper)] shadow-[0_4px_0_#111] active:translate-y-1 active:shadow-[0_0_0_#111] sm:h-14 sm:w-20 sm:text-xl",
-        icon: "h-8 w-8 text-[var(--color-muted)] hover:text-[var(--color-accent)]",
-        modal: "h-10 w-10 text-2xl leading-none text-[var(--color-ink)] hover:text-white",
-        modalAction: "mt-4 w-full border-2 border-[var(--color-divider)] bg-[var(--color-canvas)] py-2 text-sm tracking-widest text-[var(--color-ink)] hover:border-[var(--color-accent)] hover:text-[var(--color-accent)]",
+        paper: "border-b-4 border-paper-ink bg-transparent px-4 py-2 text-xs text-paper-ink hover:bg-paper-ink hover:text-paper active:bg-paper-ink active:text-paper disabled:bg-transparent disabled:hover:bg-transparent disabled:hover:text-paper-ink disabled:opacity-50 sm:px-6 sm:text-base",
+        paperSecondary: "border-b-4 border-paper-ink/40 bg-transparent px-3 py-2 text-xs text-paper-ink/70 hover:bg-divider hover:text-paper active:bg-divider active:text-paper disabled:bg-transparent disabled:hover:bg-transparent disabled:hover:text-paper-ink/70 disabled:opacity-100 sm:px-4 sm:text-base",
+        keyboard: "font-typewriter h-12 w-8 rounded-full border-2 border-[#111] bg-tw-key text-lg text-[#111] shadow-[0_4px_0_#111] transition-all active:translate-y-1 active:shadow-[0_0_0_#111] sm:h-14 sm:w-12 sm:text-xl",
+        delete: "font-typewriter h-12 w-14 rounded-full border-2 border-[#111] bg-stamp text-lg text-paper shadow-[0_4px_0_#111] active:translate-y-1 active:shadow-[0_0_0_#111] sm:h-14 sm:w-20 sm:text-xl",
+        icon: "h-8 w-8 text-muted hover:text-accent",
+        modal: "h-10 w-10 text-2xl leading-none text-ink hover:text-white",
+        modalAction: "mt-4 w-full border-2 border-divider bg-canvas py-2 text-sm tracking-widest text-ink hover:border-accent hover:text-accent",
     };
 
     return (

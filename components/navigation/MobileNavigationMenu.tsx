@@ -22,7 +22,7 @@ export default function MobileNavigationMenu() {
             <button
                 type="button"
                 onClick={() => setIsOpen(!isOpen)}
-                className="flex cursor-pointer items-center text-sm font-bold tracking-widest text-[var(--color-accent)] transition-colors hover:text-white"
+                className="flex cursor-pointer items-center text-sm font-bold tracking-widest text-accent transition-colors hover:text-white"
                 aria-label="Menüyü aç/kapat"
             >
                 [ ≡ ]
@@ -35,7 +35,7 @@ export default function MobileNavigationMenu() {
                         onClick={() => setIsOpen(false)}
                     />
 
-                    <div className="absolute left-0 top-10 z-50 w-48 rounded-sm border-2 border-[var(--color-divider)] bg-[var(--color-surface)] p-2 shadow-[4px_4px_0_rgba(0,0,0,0.5)] animate-in slide-in-from-top-2 fade-in duration-100">
+                    <div className="absolute left-0 top-10 z-50 w-48 rounded-sm border-2 border-divider bg-surface p-2 shadow-[4px_4px_0_rgba(0,0,0,0.5)] animate-in slide-in-from-top-2 fade-in duration-100">
                         {navigationItems.map(({ href, label }) => {
                             const isActive = pathname === href;
                             return (
@@ -44,8 +44,8 @@ export default function MobileNavigationMenu() {
                                     href={href}
                                     onClick={() => setIsOpen(false)}
                                     className={`flex cursor-pointer items-center rounded-sm px-3 py-3 text-sm font-bold uppercase tracking-wider transition-colors ${isActive
-                                            ? "bg-[var(--color-canvas)] text-[var(--color-accent)]"
-                                            : "text-[var(--color-ink)] hover:bg-[var(--color-divider)] hover:text-white"
+                                            ? "bg-canvas text-accent"
+                                            : "text-ink hover:bg-divider hover:text-white"
                                         }`}
                                 >
                                     <span aria-hidden="true" className={`mr-1 inline-block w-[0.7em] ${isActive ? "opacity-100" : "opacity-0"}`}>
