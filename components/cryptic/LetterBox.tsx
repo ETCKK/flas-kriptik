@@ -1,14 +1,14 @@
 export default function LetterBox({
-    letter, index, active, onClick, isLast,
+    letter, index, active, onClick, isLast, hasError
 }: {
-    letter: string; index: number; active: boolean; onClick: () => void; isLast: boolean;
+    letter: string; index: number; active: boolean; onClick: () => void; isLast: boolean; hasError: boolean;
 }) {
     return (
         <button
             type="button"
             aria-label={`${index + 1}. harf`}
             onClick={onClick}
-            className={`flex aspect-square w-10 shrink cursor-pointer items-center justify-center font-typewriter text-2xl font-bold text-paper-ink uppercase transition-all duration-100 sm:w-14 sm:text-3xl ${
+            className={`flex aspect-square w-10 shrink cursor-pointer items-center justify-center font-typewriter text-2xl font-bold ${hasError ? "text-stamp" : "text-paper-ink"} uppercase transition-all duration-100 sm:w-14 sm:text-3xl ${
                 isLast ? "" : "border-r-2 border-paper-ink/40"
             } ${
                 active

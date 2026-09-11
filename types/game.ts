@@ -1,7 +1,6 @@
 interface CrypticGame {
     status: "idle" | "playing" | "won";
     unlockedHints: number[];
-    answer?: string;
 }
 
 interface GameStore {
@@ -9,7 +8,7 @@ interface GameStore {
     initCryptic: (id: string) => void;
     startPlaying: (id: string) => void;
     unlockHint: (id: string, index: number) => void;
-    setWon: (id: string, answer: string) => void;
+    setWon: (id: string) => void;
 }
 
 export type { CrypticGame, GameStore };

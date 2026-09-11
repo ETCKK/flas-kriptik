@@ -1,5 +1,5 @@
 import CrypticBoard from "@/components/cryptic/CrypticBoard";
-import { getPublicCrypticById, getPublicCrypticByDate } from "@/lib/cryptic";
+import { getCrypticById, getCrypticByDate } from "@/lib/cryptic";
 import { notFound } from "next/navigation";
 
 interface Props {
@@ -14,8 +14,8 @@ export default async function DailyCrypticPage({ params }: Props) {
     const isDate = /^\d{2}-\d{2}-\d{4}$/.test(slug);
 
     const cryptic = isDate 
-        ? await getPublicCrypticByDate(slug) 
-        : await getPublicCrypticById(slug);
+        ? await getCrypticByDate(slug) 
+        : await getCrypticById(slug);
 
     if (!cryptic) {
         notFound();

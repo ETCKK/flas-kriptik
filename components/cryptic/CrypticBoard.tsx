@@ -1,9 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import type { PublicCryptic } from "@/types";
+import type { Cryptic } from "@/types";
 import { useGameStore } from "@/store/useGameStore";
-import { submitAnswer } from "@/actions/cryptic";
+import { normalizeAnswer } from "@/lib/cryptic";
 import { useCrypticInput } from "./hooks/useCrypticInput";
 import { useCrypticPhase } from "./hooks/useCrypticPhase";
 import { useMounted } from "@/hooks/useMounted";
@@ -13,12 +13,12 @@ import CrypticPaper, { type CrypticPage } from "./CrypticPaper";
 import Keyboard from "./Keyboard";
 import CluePage from "./pages/CluePage";
 
-export default function CrypticBoard({ cryptic }: { cryptic: PublicCryptic }) {
+export default function CrypticBoard({ cryptic }: { cryptic: Cryptic }) {
     const { games, initCryptic, startPlaying, setWon } = useGameStore();
     const game = games[cryptic.id];
     const isMounted = useMounted();
-    const [isChecking, setIsChecking] = useState(false);
     const [page, setPage] = useState<CrypticPage>("clue");
+    const [hasAnswerError, setHasAnswerError] = useState(false);
 
     useEffect(() => { initCryptic(cryptic.id); }, [cryptic.id, initCryptic]);
 
@@ -39,19 +39,22 @@ export default function CrypticBoard({ cryptic }: { cryptic: PublicCryptic }) {
     const canSubmit = !letters.includes("");
 
     useEffect(() => {
-        if (isWon && game?.answer && letters.includes("")) {
-            setLetters(game.answer.split(""));
+        if (isWon && letters.includes("")) {
+            setLetters(cryptic.answer.split(""));
         }
-    }, [game?.answer, isWon, letters, setLetters]);
+    }, [cryptic.answer, isWon, letters, setLetters]);
 
     function handleSubmit() {
-        if (isChecking || !canSubmit || isWon) return;
-        setIsChecking(true);
+        if (!canSubmit || isWon) return;
         const answer = letters.join("");
-        submitAnswer(cryptic.id, answer).then((isCorrect) => {
-            if (isCorrect) setWon(cryptic.id, answer);
-            setIsChecking(false);
-        });
+        const isCorrect = normalizeAnswer(answer) === normalizeAnswer(cryptic.answer);
+        if (isCorrect) {
+            setWon(cryptic.id);
+            return;
+        }
+
+        setHasAnswerError(true);
+        window.setTimeout(() => setHasAnswerError(false), 350);
     }
 
     if (!isMounted) return <div className="min-h-[50vh]" />;
@@ -59,7 +62,7 @@ export default function CrypticBoard({ cryptic }: { cryptic: PublicCryptic }) {
     return (
         <div className={`relative flex w-full flex-col items-center ${phase === "playing" && !isWon ? "pb-52 sm:pb-64" : ""}`}>
             <div className="relative w-full max-w-2xl perspective-[1200px]">
-                <CrypticPaper phase={phase} page={page} onPageChange={setPage}>
+                <CrypticPaper font-typewriter phase={phase} page={page} onPageChange={setPage}>
                     {page === "clue" && (
                         <CluePage
                             cryptic={cryptic}
@@ -67,9 +70,9 @@ export default function CrypticBoard({ cryptic }: { cryptic: PublicCryptic }) {
                             letters={letters}
                             cursorIndex={cursorIndex}
                             setCursorIndex={setCursorIndex}
-                            isChecking={isChecking}
                             canSubmit={canSubmit}
                             isWon={isWon}
+                            hasAnswerError={hasAnswerError}
                             handleSubmit={handleSubmit}
                         />
                     )}

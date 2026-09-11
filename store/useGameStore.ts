@@ -53,13 +53,12 @@ export const useGameStore = create<GameStore>()(
                 };
             }),
 
-            setWon: (id, answer) => set((state) => ({
+            setWon: (id) => set((state) => ({
                 games: {
                     ...state.games,
                     [id]: {
                         ...(state.games[id] ?? createInitialGameState()),
                         status: "won",
-                        answer,
                     },
                 },
             })),

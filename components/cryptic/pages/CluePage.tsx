@@ -1,24 +1,24 @@
 "use client";
 
-import type { PublicCryptic } from "@/types";
+import type { Cryptic } from "@/types";
 import Button from "@/components/ui/Button";
 import type { CrypticPhase } from "../hooks/useCrypticPhase";
 import AnswerGrid from "../AnswerGrid";
 
 interface CluePageProps {
-	cryptic: PublicCryptic;
+	cryptic: Cryptic;
 	phase: CrypticPhase;
 	letters: string[];
 	cursorIndex: number;
 	setCursorIndex: (i: number) => void;
-	isChecking: boolean;
 	canSubmit: boolean;
 	isWon: boolean;
+	hasAnswerError: boolean;
 	handleSubmit: () => void;
 }
 
 export default function CluePage({
-	cryptic, phase, letters, cursorIndex, setCursorIndex, isChecking, canSubmit, isWon, handleSubmit,
+	cryptic, phase, letters, cursorIndex, setCursorIndex, canSubmit, isWon, hasAnswerError, handleSubmit,
 }: CluePageProps) {
 	return (
 		<div className="font-typewriter relative">
@@ -50,7 +50,7 @@ export default function CluePage({
 			</h1>
 
 			<div className="mb-12 relative z-30">
-				<AnswerGrid letters={letters} cursorIndex={isWon ? -1 : cursorIndex} onSelect={setCursorIndex} />
+				<AnswerGrid letters={letters} cursorIndex={isWon ? -1 : cursorIndex} onSelect={setCursorIndex} hasError={hasAnswerError} />
 			</div>
 
 			{(phase === "playing" || phase === "extracting") && (
@@ -62,7 +62,7 @@ export default function CluePage({
 						type="button"
 						variant="paper"
 						onClick={handleSubmit}
-						disabled={isChecking || !canSubmit}
+						disabled={!canSubmit}
 					>
 						Deşifre Et
 					</Button>
