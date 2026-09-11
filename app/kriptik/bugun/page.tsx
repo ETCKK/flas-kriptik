@@ -2,7 +2,7 @@ import CrypticBoard from "@/components/cryptic/CrypticBoard";
 import { getPublicCrypticById } from "@/lib/cryptic";
 import { notFound } from "next/navigation";
 
-export default async function CluePage() {
+export default async function TodaysCrypticPage() {
 
     const cryptic = await getPublicCrypticById("001");
 

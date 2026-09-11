@@ -1,5 +1,5 @@
 export const navigationItems = [
-    { href: "/kriptik", label: "Kriptik" },
+    { href: "/kriptik/bugun", label: "Günün Dosyası" },
     { href: "/ogren", label: "Öğren" },
     { href: "/arsiv", label: "Arşiv" },
 ];

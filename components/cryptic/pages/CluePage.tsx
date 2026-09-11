@@ -35,7 +35,7 @@ export default function CluePage({
 					<span>GÖNDEREN: <span className="uppercase">{cryptic.author || "MERKEZ"}</span></span>
 				</div>
 				<div className="flex flex-col text-right">
-					<span>TARİH: {cryptic.date}</span>
+					<span>TARİH: {cryptic.date.replace(/-/g, ".")}</span>
 				</div>
 			</div>
 
