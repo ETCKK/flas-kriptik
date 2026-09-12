@@ -14,7 +14,7 @@ import Keyboard from "./Keyboard";
 import CluePage from "./pages/CluePage";
 
 export default function CrypticBoard({ cryptic }: { cryptic: Cryptic }) {
-    const { games, initCryptic, startPlaying, setWon } = useGameStore();
+    const { games, initCryptic, startPlaying, unlockHint, setWon } = useGameStore();
     const game = games[cryptic.id];
     const isMounted = useMounted();
     const [page, setPage] = useState<CrypticPage>("clue");
@@ -24,6 +24,7 @@ export default function CrypticBoard({ cryptic }: { cryptic: Cryptic }) {
 
     const status = isMounted ? (game?.status ?? "idle") : "idle";
     const isWon = status === "won";
+    const hintIndex = game?.unlockedHints.length ?? 0;
 
     const { phase, breakSeal } = useCrypticPhase({
         isMounted,
@@ -36,7 +37,9 @@ export default function CrypticBoard({ cryptic }: { cryptic: Cryptic }) {
         disabled: isWon || phase !== "playing",
         onSubmit: handleSubmit,
     });
-    const canSubmit = !letters.includes("");
+
+    const canSubmit = !letters.includes("") && !isWon && phase === "playing";
+    const canUnlockHint = hintIndex < cryptic.hints.length && !isWon && phase === "playing";
 
     useEffect(() => {
         if (isWon && letters.includes("")) {
@@ -45,7 +48,7 @@ export default function CrypticBoard({ cryptic }: { cryptic: Cryptic }) {
     }, [cryptic.answer, isWon, letters, setLetters]);
 
     function handleSubmit() {
-        if (!canSubmit || isWon) return;
+        if (!canSubmit) return;
         const answer = letters.join("");
         const isCorrect = normalizeAnswer(answer) === normalizeAnswer(cryptic.answer);
         if (isCorrect) {
@@ -55,6 +58,11 @@ export default function CrypticBoard({ cryptic }: { cryptic: Cryptic }) {
 
         setHasAnswerError(true);
         window.setTimeout(() => setHasAnswerError(false), 350);
+    }
+
+    function handleHint(){
+        if (!canUnlockHint) return;
+        unlockHint(cryptic.id, hintIndex);
     }
 
     if (!isMounted) return <div className="min-h-[50vh]" />;
@@ -73,7 +81,10 @@ export default function CrypticBoard({ cryptic }: { cryptic: Cryptic }) {
                             canSubmit={canSubmit}
                             isWon={isWon}
                             hasAnswerError={hasAnswerError}
+                            unlockedHints={game?.unlockedHints ?? []}
                             handleSubmit={handleSubmit}
+                            canUnlockHint={canUnlockHint}
+                            handleHint={handleHint}
                         />
                     )}
                 </CrypticPaper>

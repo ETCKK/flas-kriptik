@@ -10,7 +10,7 @@ interface Cryptic {
     author: string;
     difficulty?: CrypticDifficulty;
     answer: string;
-    hints?: Hint[];
+    hints: Hint[];
     explanation?: string;
     definition?: string;
     indicators?: string[];

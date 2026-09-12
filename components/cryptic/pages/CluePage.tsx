@@ -4,6 +4,7 @@ import type { Cryptic } from "@/types";
 import Button from "@/components/ui/Button";
 import type { CrypticPhase } from "../hooks/useCrypticPhase";
 import AnswerGrid from "../AnswerGrid";
+import HintGrid from "../HintGrid";
 
 interface CluePageProps {
 	cryptic: Cryptic;
@@ -12,18 +13,21 @@ interface CluePageProps {
 	cursorIndex: number;
 	setCursorIndex: (i: number) => void;
 	canSubmit: boolean;
+	canUnlockHint: boolean;
+	unlockedHints: number[];
 	isWon: boolean;
 	hasAnswerError: boolean;
 	handleSubmit: () => void;
+	handleHint: () => void;
 }
 
 export default function CluePage({
-	cryptic, phase, letters, cursorIndex, setCursorIndex, canSubmit, isWon, hasAnswerError, handleSubmit,
+	cryptic, phase, letters, cursorIndex, setCursorIndex, canSubmit, canUnlockHint, unlockedHints, isWon, hasAnswerError, handleSubmit, handleHint
 }: CluePageProps) {
 	return (
 		<div className="font-typewriter relative">
 			{isWon && (
-				<div className="absolute inset-0 z-20 flex pointer-events-none items-center justify-center">
+				<div className="absolute inset-0 z-35 flex pointer-events-none items-center justify-center">
 					<div className="animate-[stampHit_0.4s_ease-out_forwards] rounded-sm border-[6px] border-stamp px-8 py-3 text-5xl sm:text-7xl font-black tracking-widest text-stamp rotate-[-15deg] bg-paper/10">
 						ÇÖZÜLDÜ
 					</div>
@@ -55,7 +59,12 @@ export default function CluePage({
 
 			{(phase === "playing" || phase === "extracting") && (
 				<div className={`flex justify-center gap-3 sm:gap-4 relative z-30 transition-opacity duration-500 ${isWon ? "opacity-0 pointer-events-none" : "opacity-100"}`}>
-					<Button type="button" variant="paperSecondary" disabled>
+					<Button
+						type="button"
+						variant="paperSecondary"
+						disabled={!canUnlockHint}
+						onClick={handleHint}
+					>
 						İstihbarat Al
 					</Button>
 					<Button
@@ -68,6 +77,10 @@ export default function CluePage({
 					</Button>
 				</div>
 			)}
+
+			{<div className="mt-12 relative z-30">
+				<HintGrid hints={cryptic.hints} unlockedHints={unlockedHints} />
+			</div>}
 		</div>
 	);
 }
