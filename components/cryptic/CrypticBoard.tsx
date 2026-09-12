@@ -26,11 +26,13 @@ export default function CrypticBoard({ cryptic }: { cryptic: Cryptic }) {
     const isWon = status === "won";
     const hintIndex = game?.unlockedHints.length ?? 0;
 
-    const { phase, breakSeal } = useCrypticPhase({
-        isMounted,
-        status,
-        onStart: () => startPlaying(cryptic.id),
-    });
+    const { phase } = useCrypticPhase(isMounted);
+
+    useEffect(() => {
+        if (phase === "playing" && status === "idle") {
+            startPlaying(cryptic.id);
+        }
+    }, [phase, status, cryptic.id, startPlaying]);
 
     const { letters, cursorIndex, setLetters, setCursorIndex, addLetter, removeLetter } = useCrypticInput({
         length: cryptic.length,
@@ -89,7 +91,7 @@ export default function CrypticBoard({ cryptic }: { cryptic: Cryptic }) {
                         />
                     )}
                 </CrypticPaper>
-                <Envelope phase={phase} date={cryptic.date} onBreakSeal={breakSeal} />
+                <Envelope phase={phase} date={cryptic.date} />
             </div>
 
             <div className="w-full shrink-0">

@@ -1,54 +1,24 @@
 "use client";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 export type CrypticPhase = "idle" | "unsealing" | "extracting" | "playing";
-type GameStatus = "idle" | "playing" | "won";
 
-interface UseCrypticPhaseOptions {
-    isMounted: boolean;
-    status: GameStatus;
-    onStart: () => void;
-}
-
-export function useCrypticPhase({ isMounted, status, onStart }: UseCrypticPhaseOptions) {
+export function useCrypticPhase(isMounted: boolean) {
     const [phase, setPhase] = useState<CrypticPhase>("idle");
-    const hasStartedAnimation = useRef(false);
 
     useEffect(() => {
-        if (!isMounted || status === "idle" || hasStartedAnimation.current) return;
-        
-        hasStartedAnimation.current = true;
-        
-        const extractTimer = window.setTimeout(() => {
-            setPhase("extracting");
-        }, 0);
-        
-        const playingTimer = window.setTimeout(() => {
-            setPhase("playing");
-        }, 700);
-        
+        if (!isMounted) return;
+
+        const t1 = window.setTimeout(() => setPhase("unsealing"), 50);
+        const t2 = window.setTimeout(() => setPhase("extracting"), 700);
+        const t3 = window.setTimeout(() => setPhase("playing"), 1600);
+
         return () => {
-            window.clearTimeout(extractTimer);
-            window.clearTimeout(playingTimer);
-            
-            hasStartedAnimation.current = false;
+            window.clearTimeout(t1);
+            window.clearTimeout(t2);
+            window.clearTimeout(t3);
         };
-    }, [isMounted, status]);
+    }, [isMounted]);
 
-    const breakSeal = useCallback(() => {
-        if (phase !== "idle") return;
-        
-        hasStartedAnimation.current = true;
-        setPhase("unsealing");
-        
-        window.setTimeout(() => {
-            setPhase("extracting");
-            window.setTimeout(() => {
-                setPhase("playing");
-                onStart();
-            }, 1000);
-        }, 600);
-    }, [onStart, phase]);
-
-    return { phase, breakSeal };
+    return { phase };
 }

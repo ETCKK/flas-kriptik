@@ -30,7 +30,7 @@ export const useGameStore = create<GameStore>()(
                     return {
                         games: {
                             ...state.games,
-                            [id]: { ...game, status: "playing" }
+                            [id]: { ...game, status: "playing", startedAt: Date.now() }
                         }
                     };
                 }
@@ -53,15 +53,18 @@ export const useGameStore = create<GameStore>()(
                 };
             }),
 
-            setWon: (id) => set((state) => ({
-                games: {
-                    ...state.games,
-                    [id]: {
-                        ...(state.games[id] ?? createInitialGameState()),
-                        status: "won"
-                    }
+            setWon: (id) => set((state) => {
+                const game = state.games[id];
+                if (game?.status === "playing") {
+                    return {
+                        games: {
+                            ...state.games,
+                            [id]: { ...game, status: "won", completedAt: Date.now() }
+                        }
+                    };
                 }
-            }))
+                return state;
+            })
         }),
         { name: "flas-kriptik-game" }
     )

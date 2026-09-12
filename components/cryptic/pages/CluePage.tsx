@@ -43,7 +43,7 @@ export default function CluePage({ cryptic, phase, letters, cursorIndex, setCurs
                 </div>
             </div>
 
-            <div className="mb-10 text-sm leading-relaxed opacity-90 sm:text-base">
+            <div className="mb-2 text-sm leading-relaxed opacity-90 sm:text-base">
                 <p className="mt-2">
                     Teşkilattan yeni bir görev aldın. Aşağıdaki kriptik metni çözerek şifreyi bulmalı ve merkeze iletmelisin.
                 </p>
@@ -51,7 +51,7 @@ export default function CluePage({ cryptic, phase, letters, cursorIndex, setCurs
 
             <div className="flex-1 overflow-y-auto py-1 sm:py-3">
                 <div className="mb-4 text-center">
-                    <h1 className="mt-2 text-xl font-black leading-relaxed tracking-wide sm:text-3xl">
+                    <h1 className="mt-2 text-2xl font-black leading-relaxed tracking-wide sm:text-4xl">
                         &quot;{cryptic.clue}&quot;
                     </h1>
                 </div>

@@ -1,6 +1,8 @@
 interface CrypticGame {
     status: "idle" | "playing" | "won";
     unlockedHints: number[];
+    startedAt?: number;
+    completedAt?: number;
 }
 
 interface GameStore {
