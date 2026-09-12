@@ -4,7 +4,7 @@ import type { CrypticGame, GameStore } from "@/types/game";
 
 const createInitialGameState = (): CrypticGame => ({
     status: "idle",
-    unlockedHints: [],
+    unlockedHints: []
 });
 
 export const useGameStore = create<GameStore>()(
@@ -17,8 +17,8 @@ export const useGameStore = create<GameStore>()(
                     return {
                         games: {
                             ...state.games,
-                            [id]: createInitialGameState(),
-                        },
+                            [id]: createInitialGameState()
+                        }
                     };
                 }
                 return state;
@@ -30,8 +30,8 @@ export const useGameStore = create<GameStore>()(
                     return {
                         games: {
                             ...state.games,
-                            [id]: { ...game, status: "playing" },
-                        },
+                            [id]: { ...game, status: "playing" }
+                        }
                     };
                 }
                 return state;
@@ -47,9 +47,9 @@ export const useGameStore = create<GameStore>()(
                         ...state.games,
                         [id]: {
                             ...game,
-                            unlockedHints: [...game.unlockedHints, index],
-                        },
-                    },
+                            unlockedHints: [...game.unlockedHints, index]
+                        }
+                    }
                 };
             }),
 
@@ -58,10 +58,10 @@ export const useGameStore = create<GameStore>()(
                     ...state.games,
                     [id]: {
                         ...(state.games[id] ?? createInitialGameState()),
-                        status: "won",
-                    },
-                },
-            })),
+                        status: "won"
+                    }
+                }
+            }))
         }),
         { name: "flas-kriptik-game" }
     )

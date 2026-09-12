@@ -62,7 +62,7 @@ export default function CluePage({
 						type="button"
 						variant="paper"
 						onClick={handleSubmit}
-						disabled={!canSubmit}
+						disabled={!canSubmit || hasAnswerError}
 					>
 						Deşifre Et
 					</Button>
