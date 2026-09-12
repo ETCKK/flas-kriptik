@@ -13,8 +13,8 @@ export default async function DailyCrypticPage({ params }: Props) {
 
     const isDate = /^\d{2}-\d{2}-\d{4}$/.test(slug);
 
-    const cryptic = isDate 
-        ? await getCrypticByDate(slug) 
+    const cryptic = isDate
+        ? await getCrypticByDate(slug)
         : await getCrypticById(slug);
 
     if (!cryptic) {
@@ -22,9 +22,9 @@ export default async function DailyCrypticPage({ params }: Props) {
     }
 
     return (
-        <main className="min-h-[calc(100vh-6rem)] overflow-x-clip bg-canvas px-2 pb-8 pt-4 sm:px-6 sm:pt-6">
-            <div className="mx-auto w-full max-w-2xl">
-                <section className="mx-auto w-full py-2 sm:py-3">
+        <main className="h-[calc(100dvh-5rem)] w-full overflow-hidden bg-canvas px-2 sm:px-6">
+            <div className="mx-auto h-full w-full max-w-2xl">
+            <section className="h-full w-full">
                     <CrypticBoard key={cryptic.id} cryptic={cryptic} />
                 </section>
             </div>

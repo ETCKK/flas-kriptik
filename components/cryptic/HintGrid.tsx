@@ -2,24 +2,25 @@ import type { Hint } from "@/types";
 import HintBox from "./HintBox";
 
 interface HintGridProps {
-	hints: Hint[];
-	unlockedHints: number[];
+    hints: Hint[];
+    unlockedHints: number[];
 }
 
 export default function HintGrid({ hints, unlockedHints }: HintGridProps) {
-	if (hints.length === 0) return null;
+    if (unlockedHints.length === 0) {
+        return (
+            <p className="py-8 text-center font-typewriter text-sm font-bold tracking-widest text-muted opacity-60">
+                HENÜZ İSTİHBARAT ALINMADI
+            </p>
+        );
+    }
 
-	return (
-		<section className="mb-10" aria-label="İpuçları transition-all duration-300">
-			<div className="mb-3 flex items-center gap-3 text-xs font-bold uppercase tracking-widest">
-				<span>İstihbarat</span>
-				<span className="h-px flex-1 bg-paper-ink/30" />
-			</div>
-			<div className="grid gap-4">
-				{hints.map((hint, index) => (
-					unlockedHints.includes(index) ? <HintBox key={`${hint.type}-${index}`} hint={hint} /> : null
-				))}
-			</div>
-		</section>
-	);
+    return (
+        <div className="flex flex-col gap-3 font-typewriter">
+            {hints.map((hint, index) => {
+                if (!unlockedHints.includes(index)) return null;
+                return <HintBox key={`${hint.type}-${index}`} hint={hint} index={index} />;
+            })}
+        </div>
+    );
 }

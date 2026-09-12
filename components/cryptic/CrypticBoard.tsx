@@ -60,7 +60,7 @@ export default function CrypticBoard({ cryptic }: { cryptic: Cryptic }) {
         window.setTimeout(() => setHasAnswerError(false), 350);
     }
 
-    function handleHint(){
+    function handleHint() {
         if (!canUnlockHint) return;
         unlockHint(cryptic.id, hintIndex);
     }
@@ -68,8 +68,9 @@ export default function CrypticBoard({ cryptic }: { cryptic: Cryptic }) {
     if (!isMounted) return <div className="min-h-[50vh]" />;
 
     return (
-        <div className={`relative flex w-full flex-col items-center ${phase === "playing" && !isWon ? "pb-52 sm:pb-64" : ""}`}>
-            <div className="relative w-full max-w-2xl perspective-[1200px]">
+        <div className="relative flex h-full w-full flex-col items-center">
+
+            <div className="relative flex flex-1 min-h-0 w-full max-w-2xl items-center justify-center perspective-[1200px]">
                 <CrypticPaper font-typewriter phase={phase} page={page} onPageChange={setPage}>
                     {page === "clue" && (
                         <CluePage
@@ -88,12 +89,16 @@ export default function CrypticBoard({ cryptic }: { cryptic: Cryptic }) {
                         />
                     )}
                 </CrypticPaper>
-                <Envelope phase={phase} onBreakSeal={breakSeal} />
+                <Envelope phase={phase} date={cryptic.date} onBreakSeal={breakSeal} />
             </div>
 
-            {phase === "playing" && !isWon && (
-                <Keyboard onKey={addLetter} onBackspace={removeLetter} />
-            )}
+            <div className="w-full shrink-0">
+                <Keyboard
+                    onKey={addLetter}
+                    onBackspace={removeLetter}
+                    isVisible={phase === "playing" && !isWon}
+                />
+            </div>
         </div>
     );
 }

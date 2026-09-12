@@ -20,7 +20,7 @@ export default function Box({
 
     return (
         <div 
-            className={`relative w-full rounded-sm border-2 bg-surface p-6 text-ink ${variantClasses[variant]} ${className}`}
+            className={`relative w-full rounded-sm border-2 bg-surface p-5 text-ink ${variantClasses[variant]} ${className}`}
             {...props}
         >
             {children}

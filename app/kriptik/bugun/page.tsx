@@ -11,10 +11,10 @@ export default async function TodaysCrypticPage() {
     }
 
     return (
-        <main className="min-h-[calc(100vh-6rem)] overflow-x-clip bg-canvas px-2 pb-8 pt-4 sm:px-6 sm:pt-6">
-            <div className="mx-auto w-full max-w-2xl">
-                <section className="mx-auto w-full py-2 sm:py-3">
-                    <CrypticBoard cryptic={cryptic} />
+        <main className="h-[calc(100dvh-5rem)] w-full overflow-hidden bg-canvas px-2 sm:px-6">
+            <div className="mx-auto h-full w-full max-w-2xl">
+                <section className="h-full w-full">
+                    <CrypticBoard key={cryptic.id} cryptic={cryptic} />
                 </section>
             </div>
         </main>

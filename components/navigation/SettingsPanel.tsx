@@ -39,22 +39,23 @@ export default function SettingsPanel() {
                         onClick={() => setIsOpen(false)} 
                     />
                     
-                    <div className={`relative w-full max-w-sm rounded-sm border-2 border-divider bg-surface/95 p-6 font-typewriter text-ink shadow-[0_6px_0_rgba(0,0,0,0.4)] backdrop-blur-md transition-all duration-200 ${isOpen ? "translate-y-0 opacity-100" : "-translate-y-4 opacity-0"}`}>
+                    <div className={`relative w-full max-w-sm rounded-sm border-2 border-divider bg-surface/95 p-5 font-typewriter text-ink shadow-[0_6px_0_rgba(0,0,0,0.4)] backdrop-blur-md transition-all duration-200 ${isOpen ? "translate-y-0 opacity-100" : "-translate-y-4 opacity-0"}`}>
                         
-                        <div className="flex items-start justify-between border-b-2 border-divider pb-4">
+                        <div className="flex items-start justify-between border-b-2 border-divider pb-3">
                             <h2 className="text-xl font-black tracking-widest text-accent">
                                 AYARLAR
                             </h2>
                             <Button
                                 type="button" 
                                 variant="modal"
+                                aria-label="Ayarları kapat"
                                 onClick={() => setIsOpen(false)} 
                             >
                                 &times;
                             </Button>
                         </div>
                         
-                        <div className="mt-6 flex flex-col gap-4">
+                        <div className="mt-4 flex flex-col gap-3">
                             <p className="text-sm leading-relaxed text-muted">
                                 Yapım aşamasında.
                             </p>
