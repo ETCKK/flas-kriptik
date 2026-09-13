@@ -1,10 +1,10 @@
 import CrypticBoard from "@/components/cryptic/CrypticBoard";
-import { getCrypticById } from "@/lib/cryptic";
+import { getCrypticByDate } from "@/lib/cryptic";
 import { notFound } from "next/navigation";
 
 export default async function TodaysCrypticPage() {
 
-    const cryptic = await getCrypticById("e-001");
+    const cryptic = await getCrypticByDate("GG-AA-YYYY");
 
     if (!cryptic) {
         notFound();

@@ -91,7 +91,7 @@ export default function CrypticBoard({ cryptic }: { cryptic: Cryptic }) {
                         />
                     )}
                 </CrypticPaper>
-                <Envelope phase={phase} date={cryptic.date} />
+                <Envelope phase={phase} date={cryptic.date} author={cryptic.author} />
             </div>
 
             <div className="w-full shrink-0">
