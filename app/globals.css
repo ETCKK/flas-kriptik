@@ -1,4 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Special+Elite&display=swap');
 @import "tailwindcss";
 
 @theme {
@@ -22,7 +21,11 @@
 }
 
 .font-typewriter {
-  font-family: 'Special Elite', monospace;
+  font-family: var(--font-typewriter), monospace;
+}
+
+.font-handwriting {
+  font-family: var(--font-handwriting), cursive;
 }
 
 body {
