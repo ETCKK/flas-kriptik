@@ -11,15 +11,15 @@ export const cryptic: Cryptic = {
     hints: [
         {
             text: "Örnek tanım ipucu metni.",
-            type: "Tanım",
+            type: "tanım",
         },
         {
             text: "Örnek yönerge ipucu metni.",
-            type: "Yönerge",
+            type: "yönerge"
         },
         {
             text: "Örnek malzeme ipucu metni.",
-            type: "Malzeme",
+            type: "malzeme"
         }
     ],
     explanation: "Örnek kriptik cevap açıklaması.",

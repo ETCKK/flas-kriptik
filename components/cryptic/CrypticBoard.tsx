@@ -12,19 +12,20 @@ import Envelope from "./Envelope";
 import CrypticPaper, { type CrypticPage } from "./CrypticPaper";
 import Keyboard from "./Keyboard";
 import CluePage from "./pages/CluePage";
+import HintMenu from "./HintMenu";
 
 export default function CrypticBoard({ cryptic }: { cryptic: Cryptic }) {
     const { games, initCryptic, startPlaying, unlockHint, setWon } = useGameStore();
     const game = games[cryptic.id];
     const isMounted = useMounted();
     const [page, setPage] = useState<CrypticPage>("clue");
+    const [isHintMenuOpen, setIsHintMenuOpen] = useState(false);
     const [hasAnswerError, setHasAnswerError] = useState(false);
 
     useEffect(() => { initCryptic(cryptic.id); }, [cryptic.id, initCryptic]);
 
     const status = isMounted ? (game?.status ?? "idle") : "idle";
     const isWon = status === "won";
-    const hintIndex = game?.unlockedHints.length ?? 0;
 
     const { phase } = useCrypticPhase(isMounted);
 
@@ -36,12 +37,12 @@ export default function CrypticBoard({ cryptic }: { cryptic: Cryptic }) {
 
     const { letters, cursorIndex, setLetters, setCursorIndex, addLetter, removeLetter } = useCrypticInput({
         length: cryptic.length,
-        disabled: isWon || phase !== "playing",
+        disabled: isWon || phase !== "playing" || isHintMenuOpen,
         onSubmit: handleSubmit,
     });
 
-    const canSubmit = !letters.includes("") && !isWon && phase === "playing";
-    const canUnlockHint = hintIndex < cryptic.hints.length && !isWon && phase === "playing";
+    const canSubmit = !letters.includes("") && !isWon && phase === "playing" && !isHintMenuOpen && !hasAnswerError;
+    const canOpenHintMenu = !isWon && phase === "playing" && !isHintMenuOpen;
 
     useEffect(() => {
         if (isWon && letters.includes("")) {
@@ -62,8 +63,7 @@ export default function CrypticBoard({ cryptic }: { cryptic: Cryptic }) {
         window.setTimeout(() => setHasAnswerError(false), 350);
     }
 
-    function handleHint() {
-        if (!canUnlockHint) return;
+    function handleUnlockHint(hintIndex: number) {
         unlockHint(cryptic.id, hintIndex);
     }
 
@@ -82,12 +82,11 @@ export default function CrypticBoard({ cryptic }: { cryptic: Cryptic }) {
                             cursorIndex={cursorIndex}
                             setCursorIndex={setCursorIndex}
                             canSubmit={canSubmit}
+                            canOpenHintMenu={canOpenHintMenu}
                             isWon={isWon}
                             hasAnswerError={hasAnswerError}
-                            unlockedHints={game?.unlockedHints ?? []}
                             handleSubmit={handleSubmit}
-                            canUnlockHint={canUnlockHint}
-                            handleHint={handleHint}
+                            handleHint={() => setIsHintMenuOpen(true)}
                         />
                     )}
                 </CrypticPaper>
@@ -101,6 +100,13 @@ export default function CrypticBoard({ cryptic }: { cryptic: Cryptic }) {
                     isVisible={phase === "playing" && !isWon}
                 />
             </div>
+
+            <HintMenu
+                cryptic={cryptic}
+                isOpen={isHintMenuOpen}
+                onClose={() => setIsHintMenuOpen(false)}
+                onUnlockHint={handleUnlockHint}
+            />
         </div>
     );
 }
