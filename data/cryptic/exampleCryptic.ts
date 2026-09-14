@@ -12,14 +12,17 @@ export const cryptic: Cryptic = {
         {
             text: "Örnek tanım ipucu metni.",
             type: "tanım",
+            targets: ["tanım", "Örnek"]
         },
         {
             text: "Örnek yönerge ipucu metni.",
-            type: "yönerge"
+            type: "yönerge",
+            targets: ["yönerge 1", "yönerge 2"]
         },
         {
             text: "Örnek malzeme ipucu metni.",
-            type: "malzeme"
+            type: "malzeme",
+            targets: ["malzeme 1", "malzeme 2"]
         }
     ],
     explanation: "Örnek kriptik cevap açıklaması.",
