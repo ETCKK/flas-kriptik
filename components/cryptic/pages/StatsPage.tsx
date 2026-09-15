@@ -3,8 +3,6 @@
 import { useState } from "react";
 import type { Cryptic } from "@/types";
 import Button from "@/components/ui/Button";
-import Clue from "../Clue";
-import AnswerGrid from "../AnswerGrid";
 
 interface StatsPageProps {
     cryptic: Cryptic;
@@ -15,7 +13,7 @@ interface StatsPageProps {
 
 export default function StatsPage({ cryptic, unlockedHints, startedAt, completedAt }: StatsPageProps) {
     const [copied, setCopied] = useState(false);
-    
+
     const hintCount = unlockedHints.length;
     const totalHints = cryptic.hints.length;
 
@@ -28,9 +26,9 @@ export default function StatsPage({ cryptic, unlockedHints, startedAt, completed
     const secs = Math.floor((diff % 60000) / 1000);
     const formattedTime = `${hours > 0 ? hours.toString().padStart(2, "0") + ":" : ""}${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
 
-    let performanceTitle = "GÖREV BAŞARILI";
+    let performanceTitle = "Görev Başarılı.";
     if (hintCount === 0) {
-        performanceTitle = diff < 60000 ? "IŞIK HIZINDA" : "KUSURSUZ ÇÖZÜM";
+        performanceTitle = diff < 60000 ? "Işık Hızında!" : "Kusursuz Çözüm!";
     }
 
     const handleShare = async () => {
@@ -41,7 +39,7 @@ export default function StatsPage({ cryptic, unlockedHints, startedAt, completed
             } else {
                 const textArea = document.createElement("textarea");
                 textArea.value = text;
-                textArea.setAttribute("readonly", ""); 
+                textArea.setAttribute("readonly", "");
                 textArea.style.position = "fixed";
                 textArea.style.top = "-999999px";
                 textArea.style.left = "-999999px";
@@ -50,7 +48,7 @@ export default function StatsPage({ cryptic, unlockedHints, startedAt, completed
                 document.execCommand("copy");
                 textArea.remove();
             }
-            
+
             setCopied(true);
             setTimeout(() => setCopied(false), 2000);
         } catch (err) {
@@ -61,40 +59,27 @@ export default function StatsPage({ cryptic, unlockedHints, startedAt, completed
     const letters = cryptic.answer.split("");
 
     return (
-        <div className="font-typewriter relative flex h-full flex-col">
-            <div className="flex-1 overflow-y-auto py-1 sm:py-3">
-                <div className="mb-2 text-center">
-                    <Clue cryptic={cryptic} unlockedHints={unlockedHints} />
-                </div>
-                <div className="relative z-20 mb-6 sm:mb-8">
-                    <AnswerGrid
-                        letters={letters}
-                        cursorIndex={-1}
-                        onSelect={() => { }}
-                        hasError={false}
-                    />
-                </div>
+        <div className="font-typewriter relative flex h-full flex-1 flex-col">
+            <div className="flex flex-1 flex-col items-center justify-center gap-6 sm:gap-14">
+                <h2 className="mb-8 text-center text-2xl font-black tracking-widest text-stamp sm:text-3xl">
+                    {performanceTitle}
+                </h2>
 
-                <div className="flex flex-col items-center gap-4 pb-8">
-                    <h2 className="text-center text-xl font-black tracking-widest text-stamp sm:text-2xl">
-                        {performanceTitle}
-                    </h2>
-
-                    <div className="flex w-full max-w-xs sm:max-w-md flex-col gap-4 border-3 border-paper-ink py-8">
-                        <div className="flex justify-center text-base sm:text-lg font-bold">
-                            <span>GEÇEN SÜRE: {formattedTime}</span>
-                        </div>
-                        <div className="flex justify-center text-base sm:text-lg font-bold">
-                            <span>İSTİHBARAT: {hintCount} / {totalHints}</span>
-                        </div>
+                <div className="flex w-full max-w-3xs sm:max-w-sm flex-col gap-4 sm:gap-6 border-2 rounded-md border-paper-ink shadow-[4px_4px_0_var(--color-paper-ink)] py-6 sm:py-10">
+                    <div className="flex justify-center text-base font-bold sm:text-xl">
+                        <span>GEÇEN SÜRE: {formattedTime}</span>
                     </div>
-                    <div className="relative z-20 mt-auto flex shrink-0 justify-center pt-3">
-                        <Button type="button" variant="paper" onClick={handleShare} disabled={copied}>
-                            {copied ? "Kopyalandı!" : "Raporu Paylaş"}
-                        </Button>
+                    <div className="flex justify-center text-base font-bold sm:text-xl">
+                        <span>İSTİHBARAT: {hintCount} / {totalHints}</span>
                     </div>
                 </div>
             </div>
+            <div className="relative z-20 mt-auto flex shrink-0 justify-center pt-3">
+                <Button type="button" variant="paper" onClick={handleShare}>
+                    {copied ? "Kopyalandı!" : "Raporu Paylaş"}
+                </Button>
+            </div>
+
         </div>
     );
 }
