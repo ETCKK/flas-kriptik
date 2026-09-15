@@ -59,6 +59,14 @@ body {
   animation: fax-print 1.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
+.animate-slide-left {
+  animation: slide-left 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-slide-right {
+  animation: slide-right 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
 @keyframes stampHit {
   0% { opacity: 0; transform: scale(3) rotate(-15deg); }
   50% { opacity: 1; transform: scale(0.9) rotate(-15deg); }
@@ -90,3 +98,24 @@ body {
   100% { transform: translateY(-24px); }
 }
 
+@keyframes slide-left {
+  0% { 
+    opacity: 0; 
+    transform: translateX(50px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slide-right {
+  0% { 
+    opacity: 0; 
+    transform: translateX(-50px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
