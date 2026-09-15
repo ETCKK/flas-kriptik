@@ -12,13 +12,14 @@ import Envelope from "./Envelope";
 import CrypticPaper, { type CrypticPage } from "./CrypticPaper";
 import Keyboard from "./Keyboard";
 import CluePage from "./pages/CluePage";
+import StatsPage from "./pages/StatsPage";
+import ExplanationPage from "./pages/ExplanationPage";
 import HintMenu from "./HintMenu";
 
 export default function CrypticBoard({ cryptic }: { cryptic: Cryptic }) {
     const { games, initCryptic, startPlaying, unlockHint, setWon } = useGameStore();
     const game = games[cryptic.id];
     const isMounted = useMounted();
-    const [page, setPage] = useState<CrypticPage>("clue");
     const [isHintMenuOpen, setIsHintMenuOpen] = useState(false);
     const [hasAnswerError, setHasAnswerError] = useState(false);
 
@@ -26,8 +27,10 @@ export default function CrypticBoard({ cryptic }: { cryptic: Cryptic }) {
 
     const status = isMounted ? (game?.status ?? "idle") : "idle";
     const isWon = status === "won";
-
     const { phase } = useCrypticPhase(isMounted);
+
+    const [page, setPage] = useState<CrypticPage>("clue");
+    const pages: CrypticPage[] = isWon ? ["clue", "stats", "explanation"] : ["clue"];
 
     useEffect(() => {
         if (phase === "playing" && status === "idle") {
@@ -73,7 +76,7 @@ export default function CrypticBoard({ cryptic }: { cryptic: Cryptic }) {
         <div className="relative flex h-full w-full flex-col items-center">
 
             <div className="relative flex flex-1 min-h-0 w-full max-w-2xl items-center justify-center perspective-[1200px]">
-                <CrypticPaper font-typewriter phase={phase} page={page} onPageChange={setPage}>
+                <CrypticPaper font-typewriter cryptic={cryptic} phase={phase} page={page} pages={pages} onPageChange={setPage}>
                     {page === "clue" && (
                         <CluePage
                             cryptic={cryptic}
@@ -87,6 +90,22 @@ export default function CrypticBoard({ cryptic }: { cryptic: Cryptic }) {
                             hasAnswerError={hasAnswerError}
                             handleSubmit={handleSubmit}
                             handleHint={() => setIsHintMenuOpen(true)}
+                        />
+                    )}
+
+                    {page === "stats" && (
+                        <StatsPage
+                            cryptic={cryptic}
+                            unlockedHints={game?.unlockedHints ?? []}
+                            startedAt={game?.startedAt ?? 0}
+                            completedAt={game?.completedAt ?? 0}
+                        />
+                    )}
+
+                    {page === "explanation" && (
+                        <ExplanationPage
+                            cryptic={cryptic}
+                            unlockedHints={game?.unlockedHints ?? []}
                         />
                     )}
                 </CrypticPaper>

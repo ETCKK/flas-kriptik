@@ -41,15 +41,6 @@ export default function CluePage({
                 </div>
             )}
 
-            <div className="mb-3 flex shrink-0 flex-row justify-between border-b-2 border-paper-ink pb-2 text-[10px] font-bold sm:text-sm">
-                <div className="flex flex-col text-left">
-                    <span>GÖNDEREN: <span className="uppercase">{cryptic.author}</span></span>
-                </div>
-                <div className="flex flex-col text-right">
-                    <span>TARİH: {cryptic.date.replace(/-/g, ".")}</span>
-                </div>
-            </div>
-
             <div className="mb-2 text-sm leading-relaxed opacity-90 sm:text-base">
                 <p className="mt-2">
                     Teşkilat verilen kriptiği çözmeni istiyor. Şifreyi bul ve merkeze ilet.
@@ -67,7 +58,7 @@ export default function CluePage({
             </div>
 
             {(phase === "playing" || phase === "extracting") && (
-                <div className="relative z-20 mt-auto flex shrink-0 justify-center gap-3 pt-3 transition-opacity duration-500 sm:gap-4">
+                <div className={`relative z-20 mt-auto flex shrink-0 justify-center gap-3 pt-3 transition-opacity duration-500 sm:gap-4 ${isWon ? "pointer-events-none opacity-0" : "opacity-100"}`}>
                     <Button type="button" variant="paperSecondary" onClick={handleHint} disabled={!canOpenHintMenu}>
                         İstihbarat
                     </Button>
