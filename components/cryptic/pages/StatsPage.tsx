@@ -50,7 +50,7 @@ export default function StatsPage({ cryptic, unlockedHints, startedAt, completed
             }
 
             setCopied(true);
-            setTimeout(() => setCopied(false), 2000);
+            setTimeout(() => setCopied(false), 5000);
         } catch (err) {
             console.error("Failed to copy:", err);
         }
@@ -60,7 +60,7 @@ export default function StatsPage({ cryptic, unlockedHints, startedAt, completed
 
     return (
         <div className="font-typewriter relative flex h-full flex-1 flex-col">
-            <div className="flex flex-1 flex-col items-center justify-center gap-6 sm:gap-14">
+            <div className="flex flex-1 flex-col items-center justify-center gap-6 sm:gap-8">
                 <h2 className="mb-8 text-center text-2xl font-black tracking-widest text-stamp sm:text-3xl">
                     {performanceTitle}
                 </h2>
@@ -75,7 +75,7 @@ export default function StatsPage({ cryptic, unlockedHints, startedAt, completed
                 </div>
             </div>
             <div className="relative z-20 mt-auto flex shrink-0 justify-center pt-3">
-                <Button type="button" variant="paper" onClick={handleShare}>
+                <Button type="button" variant="paper" onClick={handleShare} disabled={copied}>
                     {copied ? "Kopyalandı!" : "Raporu Paylaş"}
                 </Button>
             </div>

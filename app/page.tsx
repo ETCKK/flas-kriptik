@@ -18,7 +18,7 @@ export default async function Home() {
 
                     <div className="w-[98%] px-2 pt-4 sm:pt-6 tracking-widest">
                         <p className="font-typewriter text-2xl font-bold text-accent sm:text-2xl">
-                            Merhaba Ajan,
+                            Hoşgeldin Ajan,
                         </p>
                         <p className="mt-4 font-typewriter font-thin text-base text-ink sm:text-lg">
                             Günün dosyası hazır. Lütfen zarfı açıp dosyayı incele.
