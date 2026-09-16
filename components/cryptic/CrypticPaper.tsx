@@ -38,7 +38,7 @@ export default function CrypticPaper({
     return (
         <div
             data-page={page}
-            className={`relative z-10 mx-auto flex h-[96%] max-h-[640px] w-[95%] flex-col overflow-hidden border-2 border-paper-ink bg-paper text-paper-ink shadow-[0_6px_0_rgba(0,0,0,0.4)] transition-all duration-1000 ease-[cubic-bezier(0.16,1,0.3,1)] ${transformClass}`}
+            className={`relative z-10 mx-auto flex h-[96%] max-h-[640px] w-[95%] flex-col overflow-hidden bg-paper text-paper-ink shadow-[0_6px_0_rgba(0,0,0,0.4)] transition-all duration-1000 ease-[cubic-bezier(0.16,1,0.3,1)] ${transformClass}`}
         >
             <div key={page} className={`relative flex h-full w-full flex-col p-3 sm:p-5 ${animationClass}`}>
                 <div className="mb-3 flex shrink-0 flex-row justify-between border-dotted border-b-3 border-paper-ink pb-2 font-typewriter text-[10px] font-bold sm:text-sm">
