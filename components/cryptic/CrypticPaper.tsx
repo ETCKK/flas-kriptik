@@ -76,7 +76,7 @@ export default function CrypticPaper({
                         const isActive = page === item;
                         const stateClasses = isActive
                             ? "z-5 bg-paper text-paper-ink"
-                            : "bg-paper-muted text-paper-ink/60";
+                            : "bg-paper/90 text-paper-ink/60";
 
                         return (
                             <button

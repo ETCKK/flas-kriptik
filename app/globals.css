@@ -10,7 +10,6 @@
   --color-danger: #991b1b;
 
   --color-paper: #f4ecd8;
-  --color-paper-muted: color-mix(in srgb, var(--color-paper) 88%, var(--color-canvas));
   --color-paper-ink: #1a1a1a;
   --color-stamp: #991b1b;
   --color-envelope-back: #b08d4f;
