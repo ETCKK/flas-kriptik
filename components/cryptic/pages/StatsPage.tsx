@@ -9,6 +9,7 @@ interface StatsPageProps {
     unlockedHints: number[];
     startedAt?: number;
     completedAt?: number;
+    streak?: number;
 }
 
 interface Message {
@@ -33,7 +34,23 @@ const defaultMessage: Message = {
     content: "Temiz bir çözüm. Tebrikler ajan!"
 }
 
-export default function StatsPage({ cryptic, unlockedHints, startedAt, completedAt }: StatsPageProps) {
+const DUMMY_STREAK = 3;
+
+function getResultMessage(hintCount: number, totalHints: number, duration: number): Message {
+    if (hintCount === 0) {
+        return duration < 60000 ? flashMessage : noHintMessage;
+    }
+
+    return hintCount === totalHints ? allHintMessage : defaultMessage;
+}
+
+export default function StatsPage({
+    cryptic,
+    unlockedHints,
+    startedAt,
+    completedAt,
+    streak = DUMMY_STREAK,
+}: StatsPageProps) {
     const [copied, setCopied] = useState(false);
 
     const hintCount = unlockedHints.length;
@@ -48,13 +65,7 @@ export default function StatsPage({ cryptic, unlockedHints, startedAt, completed
     const secs = Math.floor((diff % 60000) / 1000);
     const formattedTime = `${hours > 0 ? hours.toString().padStart(2, "0") + ":" : ""}${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
 
-    let message: Message;
-
-    if (hintCount === 0) {
-        diff < 60000 ? message = flashMessage : message = noHintMessage;
-    }else{
-        hintCount === totalHints ? message = allHintMessage : message = defaultMessage; 
-    }
+    const message = getResultMessage(hintCount, totalHints, diff);
 
     const handleShare = async () => {
         const text = `Flaş Kriptik #${cryptic.id.split("-")[1]} | ⏱️ ${formattedTime} | 🕵️ ${hintCount}/${totalHints} | ${cryptic.date.replace(/-/g, "/")}`;
@@ -82,32 +93,35 @@ export default function StatsPage({ cryptic, unlockedHints, startedAt, completed
     };
 
     return (
-        <div className="font-typewriter relative flex h-full flex-1 flex-col">
-            <div className="flex flex-1 flex-col items-center justify-start py-4">
-                <h2 className="text-center text-2xl font-black tracking-widest text-stamp sm:text-3xl mb-6 sm:mb-8 underline decoration-3 underline-offset-10">
+        <div className="font-typewriter relative flex h-full min-h-0 flex-col">
+            <div className="flex min-h-0 flex-1 flex-col items-center px-1 pt-2 sm:px-4 sm:pt-5">
+                <h2 className="text-center text-xl font-black tracking-widest text-stamp underline decoration-2 underline-offset-6 sm:text-3xl sm:decoration-3 sm:underline-offset-8">
                     {message.title}
                 </h2>
-                <div className="flex flex-col items-center px-2 pb-8 sm:px-4">
-                    <p className="text-center text-lg font-medium leading-relaxed tracking-wider sm:text-2xl">
-                        {message.content}
-                    </p>
-                </div>
+                <p className="mt-4 max-w-lg text-center text-sm font-medium leading-relaxed tracking-wide sm:mt-6 sm:text-lg">
+                    {message.content}
+                </p>
 
-                <div className="flex w-full max-w-3xs sm:max-w-sm flex-col gap-4 sm:gap-6 sm:mb-8 mt-auto border-2 rounded-md border-paper-ink shadow-[4px_4px_0_var(--color-paper-ink)] py-6 sm:py-10">
-                    <div className="flex justify-center text-base font-bold sm:text-xl">
-                        <span>GEÇEN SÜRE: {formattedTime}</span>
+                <dl className="my-auto grid w-full grid-cols-3 border-paper-ink/70">
+                    <div className="min-w-0 border-r border-paper-ink/35 px-1 py-4 text-center sm:px-3 sm:py-6">
+                        <dt className="text-[9px] font-bold tracking-[0.18em] opacity-60 sm:text-xs">SÜRE</dt>
+                        <dd className="mt-2 text-base font-black tracking-wide sm:text-2xl">{formattedTime}</dd>
                     </div>
-                    <div className="flex justify-center text-base font-bold sm:text-xl">
-                        <span>İSTİHBARAT: {hintCount} / {totalHints}</span>
+                    <div className="min-w-0 border-r border-paper-ink/35 px-1 py-4 text-center sm:px-3 sm:py-6">
+                        <dt className="text-[9px] font-bold tracking-[0.12em] opacity-60 sm:text-xs sm:tracking-[0.18em]">İSTİHBARAT</dt>
+                        <dd className="mt-2 text-base font-black tracking-wide sm:text-2xl">{hintCount} / {totalHints}</dd>
                     </div>
-                </div>
+                    <div className="min-w-0 px-1 py-4 text-center sm:px-3 sm:py-6">
+                        <dt className="text-[9px] font-bold tracking-[0.18em] opacity-60 sm:text-xs">SERİ</dt>
+                        <dd className="mt-2 text-base font-black tracking-wide sm:text-2xl">{streak} GÜN</dd>
+                    </div>
+                </dl>
             </div>
-            <div className="relative z-20 mt-auto flex shrink-0 justify-center pt-3">
-                <Button type="button" variant="paper" onClick={handleShare} disabled={copied}>
+            <div className="relative z-20 flex shrink-0 justify-center pb-1 pt-4 sm:pt-6">
+                <Button type="button" variant="paper" className="min-w-36" onClick={handleShare} disabled={copied}>
                     {copied ? "Kopyalandı!" : "Raporu Paylaş"}
                 </Button>
             </div>
-
         </div>
     );
 }

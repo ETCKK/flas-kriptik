@@ -58,7 +58,7 @@ export default function CluePage({
             </div>
 
             {(phase === "playing" || phase === "extracting") && (
-                <div className={`relative z-20 mt-auto flex shrink-0 justify-center gap-3 pt-3 transition-opacity duration-500 sm:gap-4 ${isWon ? "pointer-events-none opacity-0" : "opacity-100"}`}>
+                <div className={`relative z-20 mt-auto flex shrink-0 justify-center gap-3 pt-3 transition-opacity duration-500 sm:gap-4`}>
                     <Button type="button" variant="paperSecondary" onClick={handleHint} disabled={!canOpenHintMenu}>
                         İstihbarat
                     </Button>

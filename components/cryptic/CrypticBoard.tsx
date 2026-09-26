@@ -59,6 +59,7 @@ export default function CrypticBoard({ cryptic }: { cryptic: Cryptic }) {
         const isCorrect = normalizeAnswer(answer) === normalizeAnswer(cryptic.answer);
         if (isCorrect) {
             setWon(cryptic.id);
+            setTimeout(() => setPage("stats"), 800);
             return;
         }
 
