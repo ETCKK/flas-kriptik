@@ -36,7 +36,7 @@ export default function MobileNavigationMenu() {
             <button
                 type="button"
                 onClick={() => setIsOpen(!isOpen)}
-                className="flex cursor-pointer items-center text-sm font-bold tracking-widest text-accent transition-colors hover:text-white"
+                className="flex cursor-pointer items-center text-sm font-bold tracking-widest text-accent transition-colors hover:text-ink-hover"
                 aria-label="Menüyü aç/kapat"
                 aria-expanded={isOpen}
             >
@@ -50,7 +50,7 @@ export default function MobileNavigationMenu() {
                         onClick={() => setIsOpen(false)}
                     />
 
-                    <div className="absolute left-0 top-10 z-50 w-48 rounded-sm border-2 border-divider bg-surface p-2 shadow-[0_4px_0_rgba(0,0,0,0.5)] animate-in slide-in-from-top-2 fade-in duration-100">
+                    <div className="absolute left-0 top-10 z-50 w-48 rounded-sm border-2 border-divider bg-surface p-2 shadow-[0_4px_0_var(--color-menu-shadow)] animate-in slide-in-from-top-2 fade-in duration-100">
                         {navigationItems.map(({ href, label }) => {
                             const isActive = pathname === href;
                             return (
@@ -60,7 +60,7 @@ export default function MobileNavigationMenu() {
                                     onClick={() => setIsOpen(false)}
                                     className={`flex cursor-pointer items-center rounded-sm px-3 py-2.5 text-xs font-bold uppercase tracking-widest transition-colors ${isActive
                                             ? "bg-canvas text-accent"
-                                            : "text-ink hover:bg-divider hover:text-white"
+                                            : "text-ink hover:bg-divider hover:text-ink-hover"
                                         }`}
                                 >
                                     <span aria-hidden="true" className={`mr-1 inline-block w-[0.7em] ${isActive ? "opacity-100" : "opacity-0"}`}>

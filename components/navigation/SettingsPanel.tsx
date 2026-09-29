@@ -35,11 +35,11 @@ export default function SettingsPanel() {
                 <div aria-hidden={!isOpen} className={`fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 ${isOpen ? "" : "pointer-events-none"}`}>
                     
                     <div 
-                        className={`absolute inset-0 transition-opacity duration-200 ${isOpen ? "bg-[#050505]/80 backdrop-blur-sm opacity-100" : "opacity-0"}`} 
+                        className={`absolute inset-0 transition-opacity duration-200 ${isOpen ? "bg-overlay backdrop-blur-sm opacity-100" : "opacity-0"}`}
                         onClick={() => setIsOpen(false)} 
                     />
                     
-                    <div className={`relative w-full max-w-sm rounded-sm border-2 border-divider bg-surface/95 p-5 font-typewriter text-ink shadow-[0_6px_0_rgba(0,0,0,0.4)] backdrop-blur-md transition-all duration-200 ${isOpen ? "translate-y-0 opacity-100" : "-translate-y-4 opacity-0"}`}>
+                    <div className={`relative w-full max-w-sm rounded-sm border-2 border-divider bg-surface/95 p-5 font-typewriter text-ink shadow-[0_6px_0_var(--color-ui-shadow)] backdrop-blur-md transition-all duration-200 ${isOpen ? "translate-y-0 opacity-100" : "-translate-y-4 opacity-0"}`}>
                         
                         <div className="flex items-start justify-between border-b-2 border-divider pb-3">
                             <h2 className="text-xl font-black tracking-widest text-accent">

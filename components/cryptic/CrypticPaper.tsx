@@ -52,6 +52,10 @@ export default function CrypticPaper({
             data-page={page}
             className={`relative z-10 mx-auto flex h-[96%] max-h-[640px] w-[95%] flex-col text-paper-ink transition-all duration-1000 ease-[cubic-bezier(0.16,1,0.3,1)] ${transformClass}`}
         >
+            <div
+                aria-hidden="true"
+                className={`pointer-events-none absolute inset-x-0 top-0 shadow-[0_6px_0_var(--color-ui-shadow)] ${showBookmarks ? "-bottom-12" : "bottom-0"}`}
+            />
             <div className="relative z-10 h-full min-h-0 overflow-hidden bg-paper">
                 <div key={page} className={`relative flex h-full w-full flex-col p-3 sm:p-5 ${animationClass}`}>
                     <div className="mb-3 flex shrink-0 flex-row justify-between border-dotted border-b-3 border-paper-ink pb-2 font-typewriter text-[10px] font-bold sm:text-sm">
@@ -76,7 +80,7 @@ export default function CrypticPaper({
                         const isActive = page === item;
                         const stateClasses = isActive
                             ? "z-5 bg-paper text-paper-ink"
-                            : "bg-paper/90 text-paper-ink/60";
+                            : "bg-paper-tab text-paper-ink/60";
 
                         return (
                             <button

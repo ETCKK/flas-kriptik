@@ -12,7 +12,7 @@ export default function NavigationLink({ href, children }: { href: string; child
             href={href}
             aria-current={isActive ? "page" : undefined}
             className={`relative inline-flex items-center whitespace-nowrap px-2 py-1 text-sm font-bold uppercase tracking-[0.15em] transition-colors ${
-                isActive ? "text-accent" : "text-muted hover:text-white"
+                isActive ? "text-accent" : "text-muted hover:text-ink-hover"
             }`}
         >
             <span aria-hidden="true" className={`mr-1 inline-block w-[0.7em] ${isActive ? "opacity-100" : "opacity-0"}`}>

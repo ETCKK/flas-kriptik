@@ -2,22 +2,28 @@
 
 @theme {
   --color-canvas: #1e1e2e;
-  --color-surface: #1a1e28;
-  --color-accent: #c29d59;
-  --color-ink: #e0d9c8;
-  --color-muted: #6b7280;
-  --color-divider: #2a3143;
+  --color-surface: #252537;
+  --color-accent: #d0ad72;
+  --color-ink: #e6dfd0;
+  --color-muted: #a3a3b5;
+  --color-divider: #3c3c52;
   --color-danger: #991b1b;
+  --color-ink-hover: #faf4e7;
+  --color-paper-action: #303045;
+  --color-ui-shadow: rgba(0, 0, 0, 0.4);
+  --color-menu-shadow: rgba(0, 0, 0, 0.5);
+  --color-overlay: rgba(5, 5, 5, 0.8);
 
-  --color-paper: #f4ecd8;
-  --color-paper-ink: #1a1a1a;
+  --color-paper: #f1e8d5;
+  --color-paper-tab: color-mix(in srgb, var(--color-paper) 90%, var(--color-canvas));
+  --color-paper-ink: #292720;
   --color-stamp: #991b1b;
-  --color-envelope-back: #b08d4f;
-  --color-envelope-front: #c29d59;
-  --color-envelope-flap: #d4ae63;
+  --color-envelope-back: #b39764;
+  --color-envelope-front: #c7a975;
+  --color-envelope-flap: #d8bc88;
 
-  --color-tw-bg: #1a1e28;
-  --color-tw-key: #e0d9c8;
+  --color-tw-bg: #252537;
+  --color-tw-key: #e6dfd0;
 }
 
 .font-typewriter {
