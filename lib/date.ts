@@ -37,6 +37,15 @@ export function fromSlug(slug: string): string | null {
     return `${year}-${month}-${day}`;
 }
 
+export function addDays(iso: string, days: number): string {
+    const match = ISO_PATTERN.exec(iso);
+    if (!match || !isValidDate(Number(match[1]), Number(match[2]), Number(match[3]))) {
+        throw new Error(`Invalid ISO date: ${iso}`);
+    }
+    const date = new Date(Date.UTC(Number(match[1]), Number(match[2]) - 1, Number(match[3]) + days));
+    return date.toISOString().slice(0, 10);
+}
+
 export function formatDisplayDate(iso: string, separator: string = "."): string {
     return toSlug(iso).replaceAll("-", separator);
 }

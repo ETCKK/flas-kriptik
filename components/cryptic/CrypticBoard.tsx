@@ -1,12 +1,14 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import type { HintType, PublishedCryptic } from "@/types";
 import { useGameStore } from "@/store/useGameStore";
 import { normalizeAnswer } from "@/lib/cryptic/normalize";
-import { formatDisplayDate } from "@/lib/date";
+import { formatDisplayDate, todayIstanbul } from "@/lib/date";
+import { computeStreak } from "@/lib/progress/streak";
 import { useCrypticInput } from "./hooks/useCrypticInput";
 import { useCrypticPhase } from "./hooks/useCrypticPhase";
+import { useActiveTimer } from "./hooks/useActiveTimer";
 import { useMounted } from "@/hooks/useMounted";
 
 import Envelope from "./Envelope";
@@ -17,8 +19,8 @@ import StatsPage from "./pages/StatsPage";
 import ExplanationPage from "./pages/ExplanationPage";
 import HintMenu from "./HintMenu";
 
-export default function CrypticBoard({ cryptic }: { cryptic: PublishedCryptic }) {
-    const { games, initCryptic, startPlaying, unlockHint, setWon } = useGameStore();
+export default function CrypticBoard({ cryptic, isDaily }: { cryptic: PublishedCryptic; isDaily: boolean }) {
+    const { games, initCryptic, startPlaying, unlockHint, addActiveTime, setWon } = useGameStore();
     const game = games[cryptic.id];
     const isMounted = useMounted();
     const [isHintMenuOpen, setIsHintMenuOpen] = useState(false);
@@ -36,6 +38,9 @@ export default function CrypticBoard({ cryptic }: { cryptic: PublishedCryptic })
     const status = isMounted ? (game?.status ?? "idle") : "idle";
     const isWon = status === "won";
     const { phase } = useCrypticPhase(isMounted);
+
+    const handleElapsed = useCallback((ms: number) => addActiveTime(cryptic.id, ms), [addActiveTime, cryptic.id]);
+    const flushActiveTime = useActiveTimer(status === "playing" && phase === "playing", handleElapsed);
 
     const [page, setPage] = useState<CrypticPage>("clue");
     const pages: CrypticPage[] = isWon ? ["clue", "stats", "explanation"] : ["clue"];
@@ -66,7 +71,8 @@ export default function CrypticBoard({ cryptic }: { cryptic: PublishedCryptic })
         const answer = letters.join("");
         const isCorrect = normalizeAnswer(answer) === normalizeAnswer(cryptic.answer);
         if (isCorrect) {
-            setWon(cryptic.id);
+            flushActiveTime();
+            setWon(cryptic.id, isDaily);
             statsTimeoutRef.current = window.setTimeout(() => setPage("stats"), 800);
             return;
         }
@@ -106,8 +112,8 @@ export default function CrypticBoard({ cryptic }: { cryptic: PublishedCryptic })
                         <StatsPage
                             cryptic={cryptic}
                             unlockedHints={game?.unlockedHints ?? []}
-                            startedAt={game?.startedAt ?? 0}
-                            completedAt={game?.completedAt ?? 0}
+                            activeMs={game?.activeMs ?? 0}
+                            streak={computeStreak(Object.values(games), todayIstanbul())}
                         />
                     )}
 

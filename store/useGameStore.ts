@@ -5,11 +5,16 @@ import type { HintType } from "@/types/hint";
 
 const LEGACY_HINT_ORDER: HintType[] = ["definition", "indicators", "fodder"];
 
+type LegacyGame = Omit<CrypticGame, "unlockedHints" | "activeMs"> & {
+    unlockedHints: (number | HintType)[];
+    activeMs?: number;
+};
+
 interface LegacyGameState {
-    games?: Record<string, Omit<CrypticGame, "unlockedHints"> & { unlockedHints: (number | HintType)[] }>;
+    games?: Record<string, LegacyGame>;
 }
 
-function convertHintIndexes(games: NonNullable<LegacyGameState["games"]>): Record<string, CrypticGame> {
+function convertHintIndexes(games: Record<string, LegacyGame>): Record<string, LegacyGame> {
     return Object.fromEntries(
         Object.entries(games).map(([id, game]) => [
             id,
@@ -23,13 +28,39 @@ function convertHintIndexes(games: NonNullable<LegacyGameState["games"]>): Recor
     );
 }
 
+function estimateActiveMs({ status, startedAt, completedAt }: LegacyGame): number {
+    if (status !== "won" || startedAt === undefined || completedAt === undefined) {
+        return 0;
+    }
+    return Math.max(0, completedAt - startedAt);
+}
+
+function addTimerAndDailyFlag(games: Record<string, LegacyGame>): Record<string, LegacyGame> {
+    return Object.fromEntries(
+        Object.entries(games).map(([id, game]) => [
+            id,
+            {
+                ...game,
+                activeMs: game.activeMs ?? estimateActiveMs(game),
+                ...(game.status === "won" && { solvedAsDaily: game.solvedAsDaily ?? false }),
+            },
+        ])
+    );
+}
+
 function migrateGameState(persistedState: unknown, version: number): GameStore {
     const state = persistedState as LegacyGameState;
     if (!state.games) {
         return state as GameStore;
     }
 
-    const games = version < 2 ? convertHintIndexes(state.games) : state.games;
+    let games = state.games;
+    if (version < 2) {
+        games = convertHintIndexes(games);
+    }
+    if (version < 4) {
+        games = addTimerAndDailyFlag(games);
+    }
 
     return { ...state, games } as GameStore;
 }
@@ -37,6 +68,7 @@ function migrateGameState(persistedState: unknown, version: number): GameStore {
 const createInitialGameState = (publishDate?: string): CrypticGame => ({
     status: "idle",
     unlockedHints: [],
+    activeMs: 0,
     ...(publishDate && { publishDate }),
 });
 
@@ -95,13 +127,26 @@ export const useGameStore = create<GameStore>()(
                 };
             }),
 
-            setWon: (id) => set((state) => {
+            addActiveTime: (id, ms) => set((state) => {
+                const game = state.games[id];
+                if (game?.status !== "playing" || !Number.isFinite(ms) || ms <= 0) {
+                    return state;
+                }
+                return {
+                    games: {
+                        ...state.games,
+                        [id]: { ...game, activeMs: (game.activeMs ?? 0) + ms }
+                    }
+                };
+            }),
+
+            setWon: (id, solvedAsDaily) => set((state) => {
                 const game = state.games[id];
                 if (game?.status === "playing") {
                     return {
                         games: {
                             ...state.games,
-                            [id]: { ...game, status: "won", completedAt: Date.now() }
+                            [id]: { ...game, status: "won", completedAt: Date.now(), solvedAsDaily }
                         }
                     };
                 }
@@ -110,7 +155,7 @@ export const useGameStore = create<GameStore>()(
         }),
         {
             name: "flas-kriptik-game",
-            version: 3,
+            version: 4,
             migrate: migrateGameState,
         }
     )

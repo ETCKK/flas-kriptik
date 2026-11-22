@@ -37,7 +37,9 @@ Next 16 specifics:
   - `index.ts`: getters and `checkAnswer`
   - `normalize.ts`, `hints.ts`, `clueChunks.ts`: pure helpers
   - `schema.ts`: the zod puzzle schema, to be reused by the admin page
-- `store/useGameStore.ts`: per-puzzle progress in localStorage under the key `flas-kriptik-game`, schema version 3. Each game keeps its puzzle's `publishDate`.
+- `lib/progress/streak.ts`: `computeStreak`, pure and shared by guests and the future server.
+- `lib/date.ts`: Istanbul dates, slugs, `addDays` and `formatDisplayDate`.
+- `store/useGameStore.ts`: per-puzzle progress in localStorage under the key `flas-kriptik-game`, schema version 4. Each game keeps its puzzle's `publishDate`, its active time (`activeMs`) and `solvedAsDaily`.
 - `data/cryptic/`: only the example puzzle. Real puzzles will live in the database.
 - `types/`: shared types.
 
@@ -56,7 +58,8 @@ Next 16 specifics:
 Don't propose alternatives to these unless asked.
 
 - Answers are sent to the client on purpose, for instant checking.
-- The day changes at midnight Europe/Istanbul time. A streak only counts puzzles solved on their publish day.
+- The day changes at midnight Europe/Istanbul time. A streak only counts clues solved as the daily clue: the page was loaded while the clue's `publishDate` was today (`isDaily` from the server, saved as `solvedAsDaily`). The archive lists only clues before today.
+- The solve timer counts active time only: while playing with the tab visible.
 - There's no "reveal answer". Letter hints are planned instead.
 - Guests play with local progress. Signing in is optional, and syncs and merges progress without losing any.
 - Puzzles are entered only through the admin page into the database.

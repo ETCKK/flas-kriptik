@@ -17,7 +17,7 @@ export default async function TodaysCrypticPage() {
         <main className="h-[calc(100dvh-5rem)] w-full overflow-hidden bg-canvas px-2 sm:px-6">
             <div className="mx-auto h-full w-full max-w-2xl">
                 <section className="h-full w-full">
-                    <CrypticBoard key={cryptic.id} cryptic={cryptic} />
+                    <CrypticBoard key={cryptic.id} cryptic={cryptic} isDaily />
                 </section>
             </div>
         </main>

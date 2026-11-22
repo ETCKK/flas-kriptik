@@ -9,9 +9,8 @@ import Button from "@/components/ui/Button";
 interface StatsPageProps {
     cryptic: PublishedCryptic;
     unlockedHints: HintType[];
-    startedAt?: number;
-    completedAt?: number;
-    streak?: number;
+    activeMs: number;
+    streak: number;
 }
 
 interface Message {
@@ -36,8 +35,6 @@ const defaultMessage: Message = {
     content: "Temiz bir çözüm. Tebrikler ajan!"
 }
 
-const DUMMY_STREAK = 3;
-
 function getResultMessage(hintCount: number, totalHints: number, duration: number): Message {
     if (hintCount === 0) {
         return duration < 60000 ? flashMessage : noHintMessage;
@@ -49,19 +46,15 @@ function getResultMessage(hintCount: number, totalHints: number, duration: numbe
 export default function StatsPage({
     cryptic,
     unlockedHints,
-    startedAt,
-    completedAt,
-    streak = DUMMY_STREAK,
+    activeMs,
+    streak,
 }: StatsPageProps) {
     const [copied, setCopied] = useState(false);
 
     const hintCount = unlockedHints.length;
     const totalHints = getHints(cryptic).length;
 
-    let diff = 0;
-    if (startedAt && completedAt) {
-        diff = completedAt - startedAt;
-    }
+    const diff = Math.max(0, activeMs);
     const hours = Math.floor(diff / 3600000);
     const mins = Math.floor((diff % 3600000) / 60000);
     const secs = Math.floor((diff % 60000) / 1000);

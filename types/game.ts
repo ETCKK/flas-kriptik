@@ -6,6 +6,8 @@ interface CrypticGame {
     publishDate?: string;
     startedAt?: number;
     completedAt?: number;
+    activeMs: number;
+    solvedAsDaily?: boolean;
 }
 
 interface GameStore {
@@ -13,7 +15,8 @@ interface GameStore {
     initCryptic: (id: string, publishDate: string) => void;
     startPlaying: (id: string) => void;
     unlockHint: (id: string, type: HintType) => void;
-    setWon: (id: string) => void;
+    addActiveTime: (id: string, ms: number) => void;
+    setWon: (id: string, solvedAsDaily: boolean) => void;
 }
 
 export type { CrypticGame, GameStore };
