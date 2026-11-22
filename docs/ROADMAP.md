@@ -3,8 +3,8 @@
 ## Status
 
 - **Branch:** `feat/development-foundation`, off `main`. No `develop` branch exists yet.
-- **Done:** T0.2, T0.3 and the hint restructure (see Phase 0).
-- **Next:** T1.1 (Istanbul date utilities).
+- **Done:** T0.2, T0.3, the hint restructure (see Phase 0) and T1.1.
+- **Next:** T1.2 (real "today", gating and empty state).
 - **Not yet checked on a real device (from T0.2):** on-screen keys and letter boxes respond to phone taps, real Ctrl+R reloads without typing, and Firefox/Safari behave the same.
 
 ## Known issues and quirks
@@ -87,9 +87,7 @@ All decided on 2026-11-22 unless a date says otherwise.
 
 ### Phase 1: Daily foundation (still on local example data)
 
-- [ ] **T1.1 Istanbul date utilities (S)**
-  - **What:** `lib/date.ts` with `todayIstanbul()` (ISO), `toSlug` and `fromSlug` (`DD-MM-YYYY` ↔ ISO), and `istanbulDateOf(ms)`.
-  - **Done when:** tests with an injected clock pass at 23:59 and 00:01 Istanbul time.
+- [x] **T1.1 Istanbul date utilities.** Added a pure `lib/date.ts` (`istanbulDateOf`, `todayIstanbul(now?)`, `fromSlug` returns `null` for bad or impossible dates, `toSlug` throws on invalid ISO) with tests covering 23:59/00:01 and the year boundary.
 - [ ] **T1.2 Real "today", gating and empty state (M). Depends on T1.1.**
   - **Files:** `app/page.tsx`, `app/kriptik/bugun/page.tsx`, `app/kriptik/[slug]/page.tsx`, `lib/cryptic/*`.
   - **What:**
