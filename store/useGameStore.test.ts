@@ -2,6 +2,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 const STORAGE_KEY = "flas-kriptik-game";
 const ID = "t-001";
+const DATE = "2027-01-01";
 
 function createMemoryStorage(): Storage {
     const items = new Map<string, string>();
@@ -45,17 +46,17 @@ afterEach(() => {
 describe("useGameStore transitions", () => {
     it("initCryptic creates an idle game once and never resets it", async () => {
         const store = await loadStore();
-        store.getState().initCryptic(ID);
-        expect(store.getState().games[ID]).toEqual({ status: "idle", unlockedHints: [] });
+        store.getState().initCryptic(ID, DATE);
+        expect(store.getState().games[ID]).toEqual({ status: "idle", unlockedHints: [], publishDate: DATE });
 
         store.getState().unlockHint(ID, "definition");
-        store.getState().initCryptic(ID);
+        store.getState().initCryptic(ID, DATE);
         expect(store.getState().games[ID].unlockedHints).toEqual(["definition"]);
     });
 
     it("startPlaying moves idle to playing and records the start time only once", async () => {
         const store = await loadStore();
-        store.getState().initCryptic(ID);
+        store.getState().initCryptic(ID, DATE);
         store.getState().startPlaying(ID);
         const startedAt = Date.now();
         expect(store.getState().games[ID]).toMatchObject({ status: "playing", startedAt });
@@ -63,6 +64,16 @@ describe("useGameStore transitions", () => {
         vi.advanceTimersByTime(5000);
         store.getState().startPlaying(ID);
         expect(store.getState().games[ID].startedAt).toBe(startedAt);
+    });
+
+    it("initCryptic fills a missing publishDate without resetting progress", async () => {
+        const games = { [ID]: { status: "won", unlockedHints: ["fodder"], startedAt: 1000, completedAt: 61_000 } };
+        localStorage.setItem(STORAGE_KEY, JSON.stringify({ state: { games }, version: 2 }));
+
+        const store = await loadStore();
+        store.getState().initCryptic(ID, DATE);
+        expect(store.getState().games[ID]).toEqual({ ...games[ID], publishDate: DATE });
+        expect(stored().state.games[ID].publishDate).toBe(DATE);
     });
 
     it("startPlaying does nothing for an unknown puzzle", async () => {
@@ -81,7 +92,7 @@ describe("useGameStore transitions", () => {
 
     it("setWon only completes a game that is being played", async () => {
         const store = await loadStore();
-        store.getState().initCryptic(ID);
+        store.getState().initCryptic(ID, DATE);
         store.getState().setWon(ID);
         expect(store.getState().games[ID].status).toBe("idle");
 
@@ -95,7 +106,7 @@ describe("useGameStore transitions", () => {
 
     it("a won game can't be won again or restarted", async () => {
         const store = await loadStore();
-        store.getState().initCryptic(ID);
+        store.getState().initCryptic(ID, DATE);
         store.getState().startPlaying(ID);
         store.getState().setWon(ID);
         const won = store.getState().games[ID];
@@ -108,10 +119,14 @@ describe("useGameStore transitions", () => {
 });
 
 describe("useGameStore persistence", () => {
-    it("saves games to localStorage with version 2", async () => {
+    it("saves games to localStorage with version 3", async () => {
         const store = await loadStore();
+        store.getState().initCryptic(ID, DATE);
         store.getState().unlockHint(ID, "indicators");
-        expect(stored()).toEqual({ state: { games: { [ID]: { status: "idle", unlockedHints: ["indicators"] } } }, version: 2 });
+        expect(stored()).toEqual({
+            state: { games: { [ID]: { status: "idle", unlockedHints: ["indicators"], publishDate: DATE } } },
+            version: 3,
+        });
     });
 
     it.each([0, 1])("converts hint indexes from a version %i save into hint types", async (version) => {
@@ -126,12 +141,21 @@ describe("useGameStore persistence", () => {
             [ID]: { status: "won", unlockedHints: ["definition", "fodder"], startedAt: 1000, completedAt: 91_000 },
             "t-002": { status: "playing", unlockedHints: ["indicators"], startedAt: 2000 },
         });
-        expect(stored().version).toBe(2);
+        expect(stored().version).toBe(3);
     });
 
-    it("restores a version 2 save unchanged", async () => {
+    it("migrates a version 2 save to version 3 without changing it", async () => {
         const games = { [ID]: { status: "playing", unlockedHints: ["fodder"], startedAt: 1000 } };
         localStorage.setItem(STORAGE_KEY, JSON.stringify({ state: { games }, version: 2 }));
+
+        const store = await loadStore();
+        expect(store.getState().games).toEqual(games);
+        expect(stored()).toEqual({ state: { games }, version: 3 });
+    });
+
+    it("restores a version 3 save unchanged", async () => {
+        const games = { [ID]: { status: "won", unlockedHints: [], startedAt: 1000, completedAt: 2000, publishDate: DATE } };
+        localStorage.setItem(STORAGE_KEY, JSON.stringify({ state: { games }, version: 3 }));
 
         const store = await loadStore();
         expect(store.getState().games).toEqual(games);

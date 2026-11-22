@@ -37,12 +37,13 @@ Next 16 specifics:
   - `index.ts`: getters and `checkAnswer`
   - `normalize.ts`, `hints.ts`, `clueChunks.ts`: pure helpers
   - `schema.ts`: the zod puzzle schema, to be reused by the admin page
-- `store/useGameStore.ts`: per-puzzle progress in localStorage under the key `flas-kriptik-game`, schema version 2.
+- `store/useGameStore.ts`: per-puzzle progress in localStorage under the key `flas-kriptik-game`, schema version 3. Each game keeps its puzzle's `publishDate`.
 - `data/cryptic/`: only the example puzzle. Real puzzles will live in the database.
 - `types/`: shared types.
 
 ## Puzzle model
 
+- A puzzle has a unique positive `number` and a `publishDate`: an ISO `YYYY-MM-DD` date, or null for a draft. Pages receive `PublishedCryptic`, whose date is never null.
 - A puzzle has exactly one `definition: { target, hint }`.
 - `indicators` and `fodder` are optional `{ targets, hint }` groups. Include a group only if it has at least one target.
 - Always write "fodder", never "fodders".

@@ -1,9 +1,10 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import type { Cryptic, HintType } from "@/types";
+import type { HintType, PublishedCryptic } from "@/types";
 import { useGameStore } from "@/store/useGameStore";
 import { normalizeAnswer } from "@/lib/cryptic/normalize";
+import { formatDisplayDate } from "@/lib/date";
 import { useCrypticInput } from "./hooks/useCrypticInput";
 import { useCrypticPhase } from "./hooks/useCrypticPhase";
 import { useMounted } from "@/hooks/useMounted";
@@ -16,7 +17,7 @@ import StatsPage from "./pages/StatsPage";
 import ExplanationPage from "./pages/ExplanationPage";
 import HintMenu from "./HintMenu";
 
-export default function CrypticBoard({ cryptic }: { cryptic: Cryptic }) {
+export default function CrypticBoard({ cryptic }: { cryptic: PublishedCryptic }) {
     const { games, initCryptic, startPlaying, unlockHint, setWon } = useGameStore();
     const game = games[cryptic.id];
     const isMounted = useMounted();
@@ -25,7 +26,7 @@ export default function CrypticBoard({ cryptic }: { cryptic: Cryptic }) {
     const statsTimeoutRef = useRef<number | undefined>(undefined);
     const errorTimeoutRef = useRef<number | undefined>(undefined);
 
-    useEffect(() => { initCryptic(cryptic.id); }, [cryptic.id, initCryptic]);
+    useEffect(() => { initCryptic(cryptic.id, cryptic.publishDate); }, [cryptic.id, cryptic.publishDate, initCryptic]);
 
     useEffect(() => () => {
         window.clearTimeout(statsTimeoutRef.current);
@@ -117,7 +118,7 @@ export default function CrypticBoard({ cryptic }: { cryptic: Cryptic }) {
                         />
                     )}
                 </CrypticPaper>
-                <Envelope phase={phase} date={cryptic.date} author={cryptic.author} />
+                <Envelope phase={phase} date={formatDisplayDate(cryptic.publishDate)} author={cryptic.author} />
             </div>
 
             <div className="w-full shrink-0">

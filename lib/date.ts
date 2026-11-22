@@ -37,6 +37,10 @@ export function fromSlug(slug: string): string | null {
     return `${year}-${month}-${day}`;
 }
 
+export function formatDisplayDate(iso: string, separator: string = "."): string {
+    return toSlug(iso).replaceAll("-", separator);
+}
+
 export function toSlug(iso: string): string {
     const match = ISO_PATTERN.exec(iso);
     if (!match || !isValidDate(Number(match[1]), Number(match[2]), Number(match[3]))) {

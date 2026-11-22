@@ -12,9 +12,9 @@ vi.mock("@/data/cryptic", () => {
         definition: { target: "metni", hint: "Tanım ipucu." },
     };
     const cryptics: Cryptic[] = [
-        { ...base, id: "t-001", number: 1, date: "22-11-2026" },
-        { ...base, id: "t-002", number: 2, date: "23-11-2026" },
-        { ...base, id: "t-draft", number: 3, date: "GG-AA-YYYY" },
+        { ...base, id: "t-001", number: 1, publishDate: "2026-11-22" },
+        { ...base, id: "t-002", number: 2, publishDate: "2026-11-23" },
+        { ...base, id: "t-draft", number: 3, publishDate: null },
     ];
     return { cryptics, exampleCryptic: cryptics[2] };
 });

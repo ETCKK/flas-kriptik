@@ -2,7 +2,7 @@ import Link from "next/link";
 import { connection } from "next/server";
 import Envelope from "@/components/cryptic/Envelope";
 import { getPublishedByDate } from "@/lib/cryptic";
-import { todayIstanbul } from "@/lib/date";
+import { formatDisplayDate, todayIstanbul } from "@/lib/date";
 
 export default async function Home() {
     await connection();
@@ -36,7 +36,7 @@ export default async function Home() {
 
                     {cryptic && (
                         <div className="relative items-center justify-center h-[300px] w-full sm:h-[450px] perspective-[1200px]">
-                            <Envelope phase="idle" date={cryptic.date} author={cryptic.author} />
+                            <Envelope phase="idle" date={formatDisplayDate(cryptic.publishDate)} author={cryptic.author} />
 
                             <Link
                                 href="/kriptik/bugun"

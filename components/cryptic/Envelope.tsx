@@ -24,7 +24,7 @@ export default function Envelope({ phase, date, author }: { phase: "idle" | "uns
                     </span>}
 
                     {date && <span className="absolute bottom-3 right-4 font-typewriter text-sm font-bold tracking-wider text-paper-ink/45 sm:bottom-4 sm:right-6 sm:text-xl">
-                        {date.replace(/-/g, ".")}
+                        {date}
                     </span>}
                 </div>
             </div>

@@ -13,7 +13,7 @@ interface CrypticWordGroup {
 interface Cryptic {
     id: string;
     number: number;
-    date: string;
+    publishDate: string | null;
     clue: string;
     length: number;
     author: string;
@@ -25,4 +25,6 @@ interface Cryptic {
     explanation?: string;
 }
 
-export type { Cryptic, CrypticDefinition, CrypticDifficulty, CrypticWordGroup };
+type PublishedCryptic = Cryptic & { publishDate: string };
+
+export type { Cryptic, CrypticDefinition, CrypticDifficulty, CrypticWordGroup, PublishedCryptic };

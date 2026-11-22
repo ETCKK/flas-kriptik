@@ -20,7 +20,7 @@ export const crypticSchema = z
     .strictObject({
         id: z.string().trim().min(1, "Kimlik boş olamaz."),
         number: z.number().int("Numara tam sayı olmalı.").positive("Numara pozitif olmalı."),
-        date: z.string().trim().min(1, "Tarih boş olamaz."),
+        publishDate: z.iso.date("Yayın tarihi YYYY-AA-GG biçiminde geçerli bir tarih olmalı.").nullable(),
         clue: z.string().trim().min(1, "Kriptik metni boş olamaz."),
         length: z.number().int().positive(),
         author: z.string().trim().min(1, "Yazar boş olamaz."),
@@ -60,18 +60,22 @@ export const crypticSchema = z
     }) satisfies z.ZodType<Cryptic>;
 
 export const crypticCollectionSchema = z.array(crypticSchema).superRefine((cryptics, ctx) => {
-    (["id", "number", "date"] as const).forEach((field) => {
+    (["id", "number", "publishDate"] as const).forEach((field) => {
         const seen = new Map<string | number, number>();
         cryptics.forEach((cryptic, index) => {
-            const firstIndex = seen.get(cryptic[field]);
+            const value = cryptic[field];
+            if (value === null) {
+                return;
+            }
+            const firstIndex = seen.get(value);
             if (firstIndex !== undefined) {
                 ctx.addIssue({
                     code: "custom",
                     path: [index, field],
-                    message: `"${cryptic[field]}" değeri ${firstIndex}. kriptikte de kullanılıyor.`,
+                    message: `"${value}" değeri ${firstIndex}. kriptikte de kullanılıyor.`,
                 });
             } else {
-                seen.set(cryptic[field], index);
+                seen.set(value, index);
             }
         });
     });

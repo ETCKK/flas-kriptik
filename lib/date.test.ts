@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { fromSlug, istanbulDateOf, toSlug, todayIstanbul } from "./date";
+import { formatDisplayDate, fromSlug, istanbulDateOf, toSlug, todayIstanbul } from "./date";
 
 const at = (iso: string) => new Date(iso).getTime();
 
@@ -68,5 +68,19 @@ describe("toSlug", () => {
     it("throws on invalid ISO dates", () => {
         expect(() => toSlug("22-11-2026")).toThrow();
         expect(() => toSlug("2026-02-30")).toThrow();
+    });
+});
+
+describe("formatDisplayDate", () => {
+    it("formats an ISO date as DD.MM.YYYY by default", () => {
+        expect(formatDisplayDate("2026-11-23")).toBe("23.11.2026");
+    });
+
+    it("uses the given separator", () => {
+        expect(formatDisplayDate("2026-11-23", "/")).toBe("23/11/2026");
+    });
+
+    it("throws on an invalid ISO date", () => {
+        expect(() => formatDisplayDate("23-11-2026")).toThrow();
     });
 });

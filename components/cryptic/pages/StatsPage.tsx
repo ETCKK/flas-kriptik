@@ -1,12 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import type { Cryptic, HintType } from "@/types";
+import type { HintType, PublishedCryptic } from "@/types";
 import { getHints } from "@/lib/cryptic/hints";
+import { buildShareText } from "@/lib/cryptic/share";
 import Button from "@/components/ui/Button";
 
 interface StatsPageProps {
-    cryptic: Cryptic;
+    cryptic: PublishedCryptic;
     unlockedHints: HintType[];
     startedAt?: number;
     completedAt?: number;
@@ -69,7 +70,7 @@ export default function StatsPage({
     const message = getResultMessage(hintCount, totalHints, diff);
 
     const handleShare = async () => {
-        const text = `Flaş Kriptik #${cryptic.id.split("-")[1]} | ⏱️ ${formattedTime} | 🕵️ ${hintCount}/${totalHints} | ${cryptic.date.replace(/-/g, "/")}`;
+        const text = buildShareText(cryptic, { time: formattedTime, hintCount, totalHints });
         try {
             if (navigator?.clipboard?.writeText) {
                 await navigator.clipboard.writeText(text);

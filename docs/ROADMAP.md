@@ -3,8 +3,8 @@
 ## Status
 
 - **Branch:** `feat/development-foundation`, off `main`. No `develop` branch exists yet.
-- **Done:** T0.2, T0.3, the hint restructure (see Phase 0), T1.1 and T1.2.
-- **Next:** T1.3 (data model fields).
+- **Done:** T0.2, T0.3, the hint restructure (see Phase 0), T1.1, T1.2 and T1.3.
+- **Next:** T1.4 (real local streak).
 - **Not yet checked on a real device (from T0.2):** on-screen keys and letter boxes respond to phone taps, real Ctrl+R reloads without typing, and Firefox/Safari behave the same.
 
 ## Known issues and quirks
@@ -46,10 +46,11 @@ All decided on 2026-11-22 unless a date says otherwise.
    - A puzzle has exactly one `definition` (`{ target, hint }`).
    - `indicators` and `fodder` are optional groups (`{ targets, hint }`), each with at least one target when present.
    - There's one hint per word type that has words, and that hint's text covers all of its words. Hints are derived with `getHints()` and stored as unlocked by type, because positions would shift when a puzzle leaves out a word type.
-8. **Saves are versioned**, so players never lose progress when the save format changes. The persisted store is at version 2. Every change to its shape bumps the version and adds a migration with a test.
+8. **Saves are versioned**, so players never lose progress when the save format changes. The persisted store is at version 3. Every change to its shape bumps the version and adds a migration with a test.
 9. **`server-only` guards the repository** (2026-11-22). `lib/cryptic/repository.ts` imports it, so the build fails if client code ever pulls in the puzzle archive. Tests that import the repository mock it with `vi.mock("server-only", () => ({}))`.
-10. **The example puzzle is only "today" in `next dev`** (2026-11-22). The repository dates it today when `NODE_ENV` is `development`. In production builds and tests its placeholder date never parses, so it's never published and the home page shows the empty state.
+10. **The example puzzle is only "today" in `next dev`** (2026-11-22). It's a draft (`publishDate: null`), and the repository dates it today when `NODE_ENV` is `development`. In production builds and tests it's never published, so the home page shows the empty state.
 11. **Puzzles have a public `number`** (2026-11-22), added in T1.2 rather than T1.3, so slugs can take a date or a number. Ids are internal and aren't accepted as slugs.
+12. **`publishDate` is an ISO date or null** (2026-11-23). Null means a draft, matching `publish_date date null`. Getters return `PublishedCryptic` (`publishDate: string`), so components never handle a missing date. Each saved game keeps its `publishDate` for the streak. Saves from before version 3 get it the next time the puzzle opens, since the migration can't know it.
 
 ## Target architecture
 
@@ -91,13 +92,8 @@ All decided on 2026-11-22 unless a date says otherwise.
 ### Phase 1: Daily foundation (still on local example data)
 
 - [x] **T1.1 Istanbul date utilities** (`bf912b7`). Added a pure `lib/date.ts` (`istanbulDateOf`, `todayIstanbul(now?)`, `fromSlug` returns `null` for bad or impossible dates, `toSlug` throws on invalid ISO) with tests covering 23:59/00:01 and the year boundary.
-- [x] **T1.2 Real "today", gating and empty state.** Today is the Istanbul date, and `/` and `/kriptik/bugun` render per request. Slugs take a date or a puzzle `number` (`lib/cryptic/slug.ts`), and anything after today is a 404. With no puzzle today, `/` shows "Bugün dosya yok" and `/kriptik/bugun` redirects to `/`. Added `number` to `Cryptic`, a `server-only` repository and gated getters (`getPublishedByDate`, `getPublishedByNumber`, `checkAnswer`). Id slugs no longer work.
-- [ ] **T1.3 Data model fields (S). Depends on T1.2.**
-  - **What:**
-    - replace `date` with an ISO `publishDate` on `Cryptic`, and validate the date format in the schema (`number` was added in T1.2)
-    - the share text uses `number` (`StatsPage.tsx`)
-    - store `publishDate` in `CrypticGame`, with a store migration
-  - **Done when:** the share text reads `Flaş Kriptik #<number>`, and old saves still load.
+- [x] **T1.2 Real "today", gating and empty state** (`9808550`). Today is the Istanbul date, and `/` and `/kriptik/bugun` render per request. Slugs take a date or a puzzle `number` (`lib/cryptic/slug.ts`), and anything after today is a 404. With no puzzle today, `/` shows "Bugün dosya yok" and `/kriptik/bugun` redirects to `/`. Added `number` to `Cryptic`, a `server-only` repository and gated getters (`getPublishedByDate`, `getPublishedByNumber`, `checkAnswer`). Id slugs no longer work.
+- [x] **T1.3 Data model fields.** `date` became an ISO `publishDate` (null is a draft, validated with `z.iso.date()`), and pages receive `PublishedCryptic`. The share text is built by `lib/cryptic/share.ts` from `number`. Saved games store `publishDate` (store version 3, filled on the next open for older saves). Dates are shown with `formatDisplayDate`.
 - [ ] **T1.4 Real local streak (S). Depends on T1.1 and T1.3.**
   - **What:** a pure `lib/progress/streak.ts` used by `StatsPage`; remove `DUMMY_STREAK`.
   - **Done when:** tests cover solving today and yesterday (2), a skipped day (1), and yesterday's puzzle solved today (doesn't count).

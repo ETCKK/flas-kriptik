@@ -9,14 +9,9 @@ interface LegacyGameState {
     games?: Record<string, Omit<CrypticGame, "unlockedHints"> & { unlockedHints: (number | HintType)[] }>;
 }
 
-function migrateGameState(persistedState: unknown, version: number): GameStore {
-    const state = persistedState as LegacyGameState;
-    if (version >= 2 || !state.games) {
-        return state as GameStore;
-    }
-
-    const games = Object.fromEntries(
-        Object.entries(state.games).map(([id, game]) => [
+function convertHintIndexes(games: NonNullable<LegacyGameState["games"]>): Record<string, CrypticGame> {
+    return Object.fromEntries(
+        Object.entries(games).map(([id, game]) => [
             id,
             {
                 ...game,
@@ -26,13 +21,23 @@ function migrateGameState(persistedState: unknown, version: number): GameStore {
             },
         ])
     );
+}
+
+function migrateGameState(persistedState: unknown, version: number): GameStore {
+    const state = persistedState as LegacyGameState;
+    if (!state.games) {
+        return state as GameStore;
+    }
+
+    const games = version < 2 ? convertHintIndexes(state.games) : state.games;
 
     return { ...state, games } as GameStore;
 }
 
-const createInitialGameState = (): CrypticGame => ({
+const createInitialGameState = (publishDate?: string): CrypticGame => ({
     status: "idle",
-    unlockedHints: []
+    unlockedHints: [],
+    ...(publishDate && { publishDate }),
 });
 
 export const useGameStore = create<GameStore>()(
@@ -40,12 +45,21 @@ export const useGameStore = create<GameStore>()(
         (set) => ({
             games: {},
 
-            initCryptic: (id) => set((state) => {
-                if (!state.games[id]) {
+            initCryptic: (id, publishDate) => set((state) => {
+                const game = state.games[id];
+                if (!game) {
                     return {
                         games: {
                             ...state.games,
-                            [id]: createInitialGameState()
+                            [id]: createInitialGameState(publishDate)
+                        }
+                    };
+                }
+                if (game.publishDate !== publishDate) {
+                    return {
+                        games: {
+                            ...state.games,
+                            [id]: { ...game, publishDate }
                         }
                     };
                 }
@@ -96,7 +110,7 @@ export const useGameStore = create<GameStore>()(
         }),
         {
             name: "flas-kriptik-game",
-            version: 2,
+            version: 3,
             migrate: migrateGameState,
         }
     )

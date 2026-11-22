@@ -7,7 +7,7 @@ import { crypticCollectionSchema, crypticSchema } from "./schema";
 const validCryptic: Cryptic = {
     id: "t-001",
     number: 1,
-    date: "01-01-2027",
+    publishDate: "2027-01-01",
     clue: "Kısa bir deneme metni.",
     length: 5,
     author: "Test Yazar",
@@ -47,6 +47,16 @@ describe("crypticSchema", () => {
 
     it("accepts a puzzle with only a definition", () => {
         expect(crypticSchema.safeParse(without("indicators", "fodder")).success).toBe(true);
+    });
+
+    it("accepts a draft without a publish date", () => {
+        expect(crypticSchema.safeParse({ ...validCryptic, publishDate: null }).success).toBe(true);
+    });
+
+    it("rejects a publish date that isn't a real ISO date", () => {
+        expect(pathsOf({ ...validCryptic, publishDate: "01-01-2027" })).toEqual(["publishDate"]);
+        expect(pathsOf({ ...validCryptic, publishDate: "2026-02-30" })).toEqual(["publishDate"]);
+        expect(pathsOf(without("publishDate"))).toEqual(["publishDate"]);
     });
 
     it("rejects a number that isn't a positive integer", () => {
@@ -110,9 +120,17 @@ describe("crypticSchema", () => {
 });
 
 describe("crypticCollectionSchema", () => {
-    it("rejects duplicate ids, numbers and dates", () => {
+    it("rejects duplicate ids, numbers and publish dates", () => {
         const result = crypticCollectionSchema.safeParse([validCryptic, { ...validCryptic }]);
         expect(result.success).toBe(false);
-        expect(result.error!.issues.map((issue) => issue.path.join("."))).toEqual(["1.id", "1.number", "1.date"]);
+        expect(result.error!.issues.map((issue) => issue.path.join("."))).toEqual(["1.id", "1.number", "1.publishDate"]);
+    });
+
+    it("allows several drafts without a publish date", () => {
+        const drafts = [
+            { ...validCryptic, publishDate: null },
+            { ...validCryptic, id: "t-002", number: 2, publishDate: null },
+        ];
+        expect(crypticCollectionSchema.safeParse(drafts).success).toBe(true);
     });
 });
