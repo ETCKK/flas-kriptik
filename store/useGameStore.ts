@@ -66,6 +66,10 @@ export const useGameStore = create<GameStore>()(
                 return state;
             })
         }),
-        { name: "flas-kriptik-game" }
+        {
+            name: "flas-kriptik-game",
+            version: 1,
+            migrate: (persistedState) => persistedState as GameStore,
+        }
     )
 );

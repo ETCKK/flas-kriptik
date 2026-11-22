@@ -7,6 +7,7 @@ export default function LetterBox({
         <button
             type="button"
             aria-label={`${index + 1}. harf`}
+            onMouseDown={(event) => event.preventDefault()}
             onClick={onClick}
             className={`flex aspect-square w-10 shrink cursor-pointer items-center justify-center font-typewriter text-xl sm:text-2xl font-bold ${hasError ? "text-stamp" : "text-paper-ink"} uppercase transition-all duration-100 sm:w-14 sm:text-3xl ${
                 isLast ? "" : "border-r-2 border-paper-ink/40"

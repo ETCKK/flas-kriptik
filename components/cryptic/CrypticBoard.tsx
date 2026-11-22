@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { Cryptic } from "@/types";
 import { useGameStore } from "@/store/useGameStore";
 import { normalizeAnswer } from "@/lib/cryptic";
@@ -22,8 +22,15 @@ export default function CrypticBoard({ cryptic }: { cryptic: Cryptic }) {
     const isMounted = useMounted();
     const [isHintMenuOpen, setIsHintMenuOpen] = useState(false);
     const [hasAnswerError, setHasAnswerError] = useState(false);
+    const statsTimeoutRef = useRef<number | undefined>(undefined);
+    const errorTimeoutRef = useRef<number | undefined>(undefined);
 
     useEffect(() => { initCryptic(cryptic.id); }, [cryptic.id, initCryptic]);
+
+    useEffect(() => () => {
+        window.clearTimeout(statsTimeoutRef.current);
+        window.clearTimeout(errorTimeoutRef.current);
+    }, []);
 
     const status = isMounted ? (game?.status ?? "idle") : "idle";
     const isWon = status === "won";
@@ -59,12 +66,12 @@ export default function CrypticBoard({ cryptic }: { cryptic: Cryptic }) {
         const isCorrect = normalizeAnswer(answer) === normalizeAnswer(cryptic.answer);
         if (isCorrect) {
             setWon(cryptic.id);
-            setTimeout(() => setPage("stats"), 800);
+            statsTimeoutRef.current = window.setTimeout(() => setPage("stats"), 800);
             return;
         }
 
         setHasAnswerError(true);
-        window.setTimeout(() => setHasAnswerError(false), 350);
+        errorTimeoutRef.current = window.setTimeout(() => setHasAnswerError(false), 350);
     }
 
     function handleUnlockHint(hintIndex: number) {
@@ -77,7 +84,7 @@ export default function CrypticBoard({ cryptic }: { cryptic: Cryptic }) {
         <div className="relative flex h-full w-full flex-col items-center">
 
             <div className="relative flex flex-1 min-h-0 w-full max-w-2xl items-center justify-center perspective-[1200px]">
-                <CrypticPaper font-typewriter cryptic={cryptic} phase={phase} page={page} pages={pages} onPageChange={setPage}>
+                <CrypticPaper cryptic={cryptic} phase={phase} page={page} pages={pages} onPageChange={setPage}>
                     {page === "clue" && (
                         <CluePage
                             cryptic={cryptic}

@@ -51,6 +51,7 @@ export function useCrypticInput({
     useEffect(() => {
         const handleKeyDown = (event: KeyboardEvent) => {
             if (disabled) return;
+            if (event.ctrlKey || event.metaKey || event.altKey || event.isComposing) return;
             if (event.key === "Backspace") removeLetter();
             else if (event.key === "Enter" && !letters.includes("")) {
                 event.preventDefault();

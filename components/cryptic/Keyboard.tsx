@@ -1,5 +1,6 @@
 "use client";
 
+import type { MouseEvent } from "react";
 import Button from "@/components/ui/Button";
 
 const keyboardRows = [
@@ -8,9 +9,12 @@ const keyboardRows = [
     ["Z", "X", "C", "V", "B", "N", "M", "Ö", "Ç"]
 ];
 
+const keepFocus = (event: MouseEvent<HTMLButtonElement>) => event.preventDefault();
+
 export default function Keyboard({ onKey, onBackspace, isVisible }: { onKey: (key: string) => void; onBackspace: () => void; isVisible: boolean }) {
     return (
         <div
+            inert={!isVisible}
             className={`mx-auto w-full max-w-2xl border-t-4 border-[#111] bg-tw-bg shadow-none sm:rounded-t-xl sm:border-x-4 sm:shadow-[0_-10px_40px_rgba(0,0,0,0.8)] transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] ${
                 isVisible
                     ? "translate-y-0 opacity-100 pointer-events-auto"
@@ -25,6 +29,7 @@ export default function Keyboard({ onKey, onBackspace, isVisible }: { onKey: (ke
                                 key={key}
                                 type="button"
                                 variant="keyboard"
+                                onMouseDown={keepFocus}
                                 onClick={() => onKey(key)}
                             >
                                 {key}
@@ -35,6 +40,7 @@ export default function Keyboard({ onKey, onBackspace, isVisible }: { onKey: (ke
                                 type="button"
                                 aria-label="Sil"
                                 variant="delete"
+                                onMouseDown={keepFocus}
                                 onClick={onBackspace}
                             >
                                 ⌫

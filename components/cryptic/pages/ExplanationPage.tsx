@@ -9,8 +9,7 @@ interface ExplanationPageProps {
 }
 
 export default function ExplanationPage({ cryptic, unlockedHints }: ExplanationPageProps) {
-    const explanationText = (cryptic as any).explanation || "Bu kriptiğin detaylı çözüm raporu henüz arşive eklenmemiştir.";
-    const letters = cryptic.answer.split("");
+    const explanationText = cryptic.explanation || "Bu kriptiğin detaylı çözüm raporu henüz arşive eklenmemiştir.";
 
     return (
         <div className="font-typewriter relative flex h-full flex-col">
