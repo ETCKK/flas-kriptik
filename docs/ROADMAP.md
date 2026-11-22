@@ -3,8 +3,8 @@
 ## Status
 
 - **Branch:** `feat/development-foundation`, off `main`. No `develop` branch exists yet.
-- **Done:** T0.2, T0.3, the hint restructure (see Phase 0) and T1.1.
-- **Next:** T1.2 (real "today", gating and empty state).
+- **Done:** T0.2, T0.3, the hint restructure (see Phase 0), T1.1 and T1.2.
+- **Next:** T1.3 (data model fields).
 - **Not yet checked on a real device (from T0.2):** on-screen keys and letter boxes respond to phone taps, real Ctrl+R reloads without typing, and Firefox/Safari behave the same.
 
 ## Known issues and quirks
@@ -47,6 +47,9 @@ All decided on 2026-11-22 unless a date says otherwise.
    - `indicators` and `fodder` are optional groups (`{ targets, hint }`), each with at least one target when present.
    - There's one hint per word type that has words, and that hint's text covers all of its words. Hints are derived with `getHints()` and stored as unlocked by type, because positions would shift when a puzzle leaves out a word type.
 8. **Saves are versioned**, so players never lose progress when the save format changes. The persisted store is at version 2. Every change to its shape bumps the version and adds a migration with a test.
+9. **`server-only` guards the repository** (2026-11-22). `lib/cryptic/repository.ts` imports it, so the build fails if client code ever pulls in the puzzle archive. Tests that import the repository mock it with `vi.mock("server-only", () => ({}))`.
+10. **The example puzzle is only "today" in `next dev`** (2026-11-22). The repository dates it today when `NODE_ENV` is `development`. In production builds and tests its placeholder date never parses, so it's never published and the home page shows the empty state.
+11. **Puzzles have a public `number`** (2026-11-22), added in T1.2 rather than T1.3, so slugs can take a date or a number. Ids are internal and aren't accepted as slugs.
 
 ## Target architecture
 
@@ -87,21 +90,11 @@ All decided on 2026-11-22 unless a date says otherwise.
 
 ### Phase 1: Daily foundation (still on local example data)
 
-- [x] **T1.1 Istanbul date utilities.** Added a pure `lib/date.ts` (`istanbulDateOf`, `todayIstanbul(now?)`, `fromSlug` returns `null` for bad or impossible dates, `toSlug` throws on invalid ISO) with tests covering 23:59/00:01 and the year boundary.
-- [ ] **T1.2 Real "today", gating and empty state (M). Depends on T1.1.**
-  - **Files:** `app/page.tsx`, `app/kriptik/bugun/page.tsx`, `app/kriptik/[slug]/page.tsx`, `lib/cryptic/*`.
-  - **What:**
-    - add `getPublishedByDate` and `getPublishedByNumber`, and `server-only` on the repository
-    - the slug accepts a date or a number
-    - anything after today returns a 404
-    - with no puzzle today, the home page shows "Bugün dosya yok" instead of a 404
-  - **Done when:**
-    - the build marks `/` and `/kriptik/bugun` as dynamic
-    - a future date or number returns a 404
-    - the example puzzle, dated today in dev, plays as before
+- [x] **T1.1 Istanbul date utilities** (`bf912b7`). Added a pure `lib/date.ts` (`istanbulDateOf`, `todayIstanbul(now?)`, `fromSlug` returns `null` for bad or impossible dates, `toSlug` throws on invalid ISO) with tests covering 23:59/00:01 and the year boundary.
+- [x] **T1.2 Real "today", gating and empty state.** Today is the Istanbul date, and `/` and `/kriptik/bugun` render per request. Slugs take a date or a puzzle `number` (`lib/cryptic/slug.ts`), and anything after today is a 404. With no puzzle today, `/` shows "Bugün dosya yok" and `/kriptik/bugun` redirects to `/`. Added `number` to `Cryptic`, a `server-only` repository and gated getters (`getPublishedByDate`, `getPublishedByNumber`, `checkAnswer`). Id slugs no longer work.
 - [ ] **T1.3 Data model fields (S). Depends on T1.2.**
   - **What:**
-    - add `number` and an ISO `publishDate` to `Cryptic`, and validate the date format in the schema
+    - replace `date` with an ISO `publishDate` on `Cryptic`, and validate the date format in the schema (`number` was added in T1.2)
     - the share text uses `number` (`StatsPage.tsx`)
     - store `publishDate` in `CrypticGame`, with a store migration
   - **Done when:** the share text reads `Flaş Kriptik #<number>`, and old saves still load.

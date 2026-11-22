@@ -2,6 +2,7 @@ import type { Cryptic } from "@/types";
 
 export const cryptic: Cryptic = {
     id: "e-001",
+    number: 1,
     date: "GG-AA-YYYY",
     clue: "Örnek bir kriptik metin.",
     length: 5,

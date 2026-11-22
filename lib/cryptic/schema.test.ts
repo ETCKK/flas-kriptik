@@ -6,6 +6,7 @@ import { crypticCollectionSchema, crypticSchema } from "./schema";
 
 const validCryptic: Cryptic = {
     id: "t-001",
+    number: 1,
     date: "01-01-2027",
     clue: "Kısa bir deneme metni.",
     length: 5,
@@ -46,6 +47,12 @@ describe("crypticSchema", () => {
 
     it("accepts a puzzle with only a definition", () => {
         expect(crypticSchema.safeParse(without("indicators", "fodder")).success).toBe(true);
+    });
+
+    it("rejects a number that isn't a positive integer", () => {
+        expect(pathsOf({ ...validCryptic, number: 0 })).toEqual(["number"]);
+        expect(pathsOf({ ...validCryptic, number: 1.5 })).toEqual(["number"]);
+        expect(pathsOf(without("number"))).toEqual(["number"]);
     });
 
     it("rejects a length that doesn't match the answer", () => {
@@ -103,9 +110,9 @@ describe("crypticSchema", () => {
 });
 
 describe("crypticCollectionSchema", () => {
-    it("rejects duplicate ids and dates", () => {
+    it("rejects duplicate ids, numbers and dates", () => {
         const result = crypticCollectionSchema.safeParse([validCryptic, { ...validCryptic }]);
         expect(result.success).toBe(false);
-        expect(result.error!.issues.map((issue) => issue.path.join("."))).toEqual(["1.id", "1.date"]);
+        expect(result.error!.issues.map((issue) => issue.path.join("."))).toEqual(["1.id", "1.number", "1.date"]);
     });
 });

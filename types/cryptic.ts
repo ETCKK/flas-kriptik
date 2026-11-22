@@ -12,6 +12,7 @@ interface CrypticWordGroup {
 
 interface Cryptic {
     id: string;
+    number: number;
     date: string;
     clue: string;
     length: number;

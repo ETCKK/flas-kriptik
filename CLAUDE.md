@@ -24,7 +24,7 @@ Next 16 specifics:
 - `app/`: routes.
   - `/` shows the envelope teaser.
   - `/kriptik/bugun` is today's puzzle.
-  - `/kriptik/[slug]` takes a `DD-MM-YYYY` date or an id.
+  - `/kriptik/[slug]` takes a `DD-MM-YYYY` date or a puzzle number. Future puzzles are a 404.
   - `/arsiv`, `/ogren` and `/profil` are placeholders.
 - `components/cryptic/`: the game.
   - `CrypticBoard` is the client-side orchestrator.
@@ -87,3 +87,13 @@ Don't propose alternatives to these unless asked.
 - Ask before adding or upgrading dependencies.
 - Before reporting a task as done, run `npm run lint`, `npm test`, the typecheck and `npm run build`.
 - Commit messages: a short lowercase summary, optionally followed by `- ` bullet lines. No type prefixes.
+
+<!-- BEGIN:nextjs-agent-rules -->
+
+# This is NOT the Next.js you know
+
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+
+<!-- END:nextjs-agent-rules -->

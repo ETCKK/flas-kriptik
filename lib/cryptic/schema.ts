@@ -19,6 +19,7 @@ const wordGroupSchema = z.strictObject({
 export const crypticSchema = z
     .strictObject({
         id: z.string().trim().min(1, "Kimlik boş olamaz."),
+        number: z.number().int("Numara tam sayı olmalı.").positive("Numara pozitif olmalı."),
         date: z.string().trim().min(1, "Tarih boş olamaz."),
         clue: z.string().trim().min(1, "Kriptik metni boş olamaz."),
         length: z.number().int().positive(),
@@ -59,8 +60,8 @@ export const crypticSchema = z
     }) satisfies z.ZodType<Cryptic>;
 
 export const crypticCollectionSchema = z.array(crypticSchema).superRefine((cryptics, ctx) => {
-    (["id", "date"] as const).forEach((field) => {
-        const seen = new Map<string, number>();
+    (["id", "number", "date"] as const).forEach((field) => {
+        const seen = new Map<string | number, number>();
         cryptics.forEach((cryptic, index) => {
             const firstIndex = seen.get(cryptic[field]);
             if (firstIndex !== undefined) {

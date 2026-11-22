@@ -1,15 +1,13 @@
 import Link from "next/link";
+import { connection } from "next/server";
 import Envelope from "@/components/cryptic/Envelope";
-import { getCrypticByDate } from "@/lib/cryptic";
-import { notFound } from "next/navigation";
+import { getPublishedByDate } from "@/lib/cryptic";
+import { todayIstanbul } from "@/lib/date";
 
 export default async function Home() {
+    await connection();
 
-    const cryptic = await getCrypticByDate("GG-AA-YYYY");
-
-    if (!cryptic) {
-        notFound();
-    }
+    const cryptic = await getPublishedByDate(todayIstanbul());
 
     return (
         <main className="w-full bg-canvas">
@@ -20,20 +18,33 @@ export default async function Home() {
                         <p className="font-typewriter text-2xl font-bold text-accent sm:text-2xl">
                             Hoşgeldin Ajan,
                         </p>
-                        <p className="mt-4 font-typewriter font-thin text-base text-ink sm:text-lg">
-                            Günün dosyası hazır. Lütfen zarfı açıp dosyayı incele.
-                        </p>
+                        {cryptic ? (
+                            <p className="mt-4 font-typewriter font-thin text-base text-ink sm:text-lg">
+                                Günün dosyası hazır. Lütfen zarfı açıp dosyayı incele.
+                            </p>
+                        ) : (
+                            <>
+                                <p className="mt-4 font-typewriter font-thin text-base text-ink sm:text-lg">
+                                    Bugün dosya yok.
+                                </p>
+                                <p className="mt-2 font-typewriter font-thin text-sm text-muted sm:text-base">
+                                    Yarın yeni bir dosya için tekrar uğra.
+                                </p>
+                            </>
+                        )}
                     </div>
 
-                    <div className="relative items-center justify-center h-[300px] w-full sm:h-[450px] perspective-[1200px]">
-                        <Envelope phase="idle" date={cryptic.date} author={cryptic.author} />
+                    {cryptic && (
+                        <div className="relative items-center justify-center h-[300px] w-full sm:h-[450px] perspective-[1200px]">
+                            <Envelope phase="idle" date={cryptic.date} author={cryptic.author} />
 
-                        <Link
-                            href="/kriptik/bugun"
-                            className="absolute inset-0 z-40 h-[250px] w-[98%] cursor-pointer sm:h-[400px]"
-                            aria-label="Bugünün kriptiğini çöz"
-                        />
-                    </div>
+                            <Link
+                                href="/kriptik/bugun"
+                                className="absolute inset-0 z-40 h-[250px] w-[98%] cursor-pointer sm:h-[400px]"
+                                aria-label="Bugünün kriptiğini çöz"
+                            />
+                        </div>
+                    )}
 
                 </div>
             </section>
