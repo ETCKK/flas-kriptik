@@ -1,45 +1,36 @@
 import { useState } from "react";
-import type { Cryptic } from "@/types";
+import type { Cryptic, HintType } from "@/types";
+import { HINT_DECORATIONS, HINT_LABELS, getHints } from "@/lib/cryptic/hints";
 
 interface HintMenuProps {
     cryptic: Cryptic;
     isOpen: boolean;
     onClose: () => void;
-    onUnlockHint: (hintIndex: number) => void;
+    onUnlockHint: (type: HintType) => void;
 }
 
 export default function HintMenu({ cryptic, isOpen, onClose, onUnlockHint }: HintMenuProps) {
     const [view, setView] = useState<"menu" | "hint">("menu");
-    const [activeHintIdx, setActiveHintIdx] = useState<number | null>(null);
+    const [activeHintType, setActiveHintType] = useState<HintType | null>(null);
     const [prevIsOpen, setPrevIsOpen] = useState(isOpen);
 
     if (prevIsOpen !== isOpen) {
         setPrevIsOpen(isOpen);
         if (isOpen) {
             setView("menu");
-            setActiveHintIdx(null);
+            setActiveHintType(null);
         }
     }
 
     const isMenuVisible = isOpen && view === "menu";
     const isHintVisible = isOpen && view === "hint";
 
-    const getDecorationClass = (type: string) => {
-        const normalizedType = type.toLocaleLowerCase("tr-TR").trim();
-        switch (normalizedType) {
-            case "yönerge":
-                return "pen-underline decoration-wavy";
-            case "malzeme":
-                return "pen-underline decoration-dashed";
-            case "tanım":
-            default:
-                return "pen-underline decoration-solid";
-        }
-    };
+    const hints = getHints(cryptic);
+    const activeHint = hints.find((hint) => hint.type === activeHintType);
 
-    const handleSelectHint = (idx: number) => {
-        onUnlockHint(idx);
-        setActiveHintIdx(idx);
+    const handleSelectHint = (type: HintType) => {
+        onUnlockHint(type);
+        setActiveHintType(type);
         setView("hint"); 
     };
 
@@ -68,14 +59,14 @@ export default function HintMenu({ cryptic, isOpen, onClose, onUnlockHint }: Hin
                         </div>
                         
                         <div className="flex flex-col gap-6 font-typewriter">
-                            {cryptic.hints.map((hint, idx) => (
+                            {hints.map((hint) => (
                                 <button 
-                                    key={idx} 
-                                    onClick={() => handleSelectHint(idx)}
+                                    key={hint.type} 
+                                    onClick={() => handleSelectHint(hint.type)}
                                     className="group flex h-6 flex-col items-center justify-center cursor-pointer transition-opacity hover:opacity-60"
                                 >
-                                    <span className={`text-base sm:text-xl leading-[24px] font-bold uppercase tracking-widest ${getDecorationClass(hint.type)}`}>
-                                        {hint.type}
+                                    <span className={`text-base sm:text-xl leading-[24px] font-bold uppercase tracking-widest pen-underline ${HINT_DECORATIONS[hint.type]}`}>
+                                        {HINT_LABELS[hint.type]}
                                     </span>
                                 </button>
                             ))}
@@ -92,10 +83,10 @@ export default function HintMenu({ cryptic, isOpen, onClose, onUnlockHint }: Hin
                     <div className={`dot-matrix-paper w-full px-8 pt-6 pb-6 text-paper-ink shadow-[0_0_0_1px_rgba(0,0,0,0.15),0_-15px_30px_rgba(0,0,0,0.6)] ${
                         isHintVisible ? "animate-fax" : ""
                     }`}>
-                        {activeHintIdx !== null && (
+                        {activeHint && (
                             <div className="flex min-h-[72px] flex-col justify-center">
                                 <p className="text-left font-typewriter text-md sm:text-lg font-medium leading-[24px] text-paper-ink">
-                                    {cryptic.hints[activeHintIdx].text}
+                                    {activeHint.text}
                                 </p>
                             </div>
                         )}

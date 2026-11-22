@@ -1,12 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import type { Cryptic } from "@/types";
+import type { Cryptic, HintType } from "@/types";
+import { getHints } from "@/lib/cryptic/hints";
 import Button from "@/components/ui/Button";
 
 interface StatsPageProps {
     cryptic: Cryptic;
-    unlockedHints: number[];
+    unlockedHints: HintType[];
     startedAt?: number;
     completedAt?: number;
     streak?: number;
@@ -54,7 +55,7 @@ export default function StatsPage({
     const [copied, setCopied] = useState(false);
 
     const hintCount = unlockedHints.length;
-    const totalHints = cryptic.hints.length;
+    const totalHints = getHints(cryptic).length;
 
     let diff = 0;
     if (startedAt && completedAt) {

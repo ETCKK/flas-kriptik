@@ -1,11 +1,11 @@
 "use client";
 
-import type { Cryptic } from "@/types";
+import type { Cryptic, HintType } from "@/types";
 import Clue from "../Clue";
 
 interface ExplanationPageProps {
     cryptic: Cryptic;
-    unlockedHints: number[];
+    unlockedHints: HintType[];
 }
 
 export default function ExplanationPage({ cryptic, unlockedHints }: ExplanationPageProps) {

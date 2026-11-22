@@ -1,9 +1,9 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import type { Cryptic } from "@/types";
+import type { Cryptic, HintType } from "@/types";
 import { useGameStore } from "@/store/useGameStore";
-import { normalizeAnswer } from "@/lib/cryptic";
+import { normalizeAnswer } from "@/lib/cryptic/normalize";
 import { useCrypticInput } from "./hooks/useCrypticInput";
 import { useCrypticPhase } from "./hooks/useCrypticPhase";
 import { useMounted } from "@/hooks/useMounted";
@@ -74,8 +74,8 @@ export default function CrypticBoard({ cryptic }: { cryptic: Cryptic }) {
         errorTimeoutRef.current = window.setTimeout(() => setHasAnswerError(false), 350);
     }
 
-    function handleUnlockHint(hintIndex: number) {
-        unlockHint(cryptic.id, hintIndex);
+    function handleUnlockHint(type: HintType) {
+        unlockHint(cryptic.id, type);
     }
 
     if (!isMounted) return <div className="min-h-[50vh]" />;

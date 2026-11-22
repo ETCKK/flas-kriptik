@@ -1,6 +1,14 @@
-import type { Hint } from "./hint";
-
 type CrypticDifficulty = "Kolay" | "Orta" | "Zor";
+
+interface CrypticDefinition {
+    target: string;
+    hint: string;
+}
+
+interface CrypticWordGroup {
+    targets: string[];
+    hint: string;
+}
 
 interface Cryptic {
     id: string;
@@ -10,11 +18,10 @@ interface Cryptic {
     author: string;
     difficulty?: CrypticDifficulty;
     answer: string;
-    hints: Hint[];
+    definition: CrypticDefinition;
+    indicators?: CrypticWordGroup;
+    fodder?: CrypticWordGroup;
     explanation?: string;
-    definition?: string;
-    indicators?: string[];
-    fodders?: string[];
 }
 
-export type { Cryptic, CrypticDifficulty };
+export type { Cryptic, CrypticDefinition, CrypticDifficulty, CrypticWordGroup };

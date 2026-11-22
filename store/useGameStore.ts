@@ -1,6 +1,34 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import type { CrypticGame, GameStore } from "@/types/game";
+import type { HintType } from "@/types/hint";
+
+const LEGACY_HINT_ORDER: HintType[] = ["definition", "indicators", "fodder"];
+
+interface LegacyGameState {
+    games?: Record<string, Omit<CrypticGame, "unlockedHints"> & { unlockedHints: (number | HintType)[] }>;
+}
+
+function migrateGameState(persistedState: unknown, version: number): GameStore {
+    const state = persistedState as LegacyGameState;
+    if (version >= 2 || !state.games) {
+        return state as GameStore;
+    }
+
+    const games = Object.fromEntries(
+        Object.entries(state.games).map(([id, game]) => [
+            id,
+            {
+                ...game,
+                unlockedHints: game.unlockedHints
+                    .map((hint) => (typeof hint === "number" ? LEGACY_HINT_ORDER[hint] : hint))
+                    .filter((hint): hint is HintType => hint !== undefined),
+            },
+        ])
+    );
+
+    return { ...state, games } as GameStore;
+}
 
 const createInitialGameState = (): CrypticGame => ({
     status: "idle",
@@ -37,9 +65,9 @@ export const useGameStore = create<GameStore>()(
                 return state;
             }),
 
-            unlockHint: (id, index) => set((state) => {
+            unlockHint: (id, type) => set((state) => {
                 const game = state.games[id] ?? createInitialGameState();
-                if (game.unlockedHints.includes(index)) {
+                if (game.unlockedHints.includes(type)) {
                     return state;
                 }
                 return {
@@ -47,7 +75,7 @@ export const useGameStore = create<GameStore>()(
                         ...state.games,
                         [id]: {
                             ...game,
-                            unlockedHints: [...game.unlockedHints, index]
+                            unlockedHints: [...game.unlockedHints, type]
                         }
                     }
                 };
@@ -68,8 +96,8 @@ export const useGameStore = create<GameStore>()(
         }),
         {
             name: "flas-kriptik-game",
-            version: 1,
-            migrate: (persistedState) => persistedState as GameStore,
+            version: 2,
+            migrate: migrateGameState,
         }
     )
 );
