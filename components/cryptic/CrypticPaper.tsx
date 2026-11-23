@@ -2,12 +2,13 @@
 
 import { useState, type ReactNode } from "react";
 import type { CrypticPhase } from "./hooks/useCrypticPhase";
-import type { Cryptic } from "@/types";
+import { formatDisplayDate } from "@/lib/date";
+import type { PublishedCryptic } from "@/types";
 
 export type CrypticPage = "clue" | "stats" | "explanation";
 
 interface CrypticPaperProps {
-    cryptic: Cryptic;
+    cryptic: PublishedCryptic;
     phase: CrypticPhase;
     page: CrypticPage;
     pages: CrypticPage[];
@@ -63,7 +64,7 @@ export default function CrypticPaper({
                             <span>GÖNDEREN: <span className="uppercase">{cryptic.author}</span></span>
                         </div>
                         <div className="flex flex-col text-right">
-                            <span>TARİH: {cryptic.date.replace(/-/g, ".")}</span>
+                            <span>TARİH: {formatDisplayDate(cryptic.publishDate)}</span>
                         </div>
                     </div>
 

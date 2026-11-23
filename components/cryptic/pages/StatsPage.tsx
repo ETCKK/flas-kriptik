@@ -1,15 +1,16 @@
 "use client";
 
 import { useState } from "react";
-import type { Cryptic } from "@/types";
+import type { HintType, PublishedCryptic } from "@/types";
+import { getHints } from "@/lib/cryptic/hints";
+import { buildShareText } from "@/lib/cryptic/share";
 import Button from "@/components/ui/Button";
 
 interface StatsPageProps {
-    cryptic: Cryptic;
-    unlockedHints: number[];
-    startedAt?: number;
-    completedAt?: number;
-    streak?: number;
+    cryptic: PublishedCryptic;
+    unlockedHints: HintType[];
+    activeMs: number;
+    streak: number;
 }
 
 interface Message {
@@ -34,8 +35,6 @@ const defaultMessage: Message = {
     content: "Temiz bir çözüm. Tebrikler ajan!"
 }
 
-const DUMMY_STREAK = 3;
-
 function getResultMessage(hintCount: number, totalHints: number, duration: number): Message {
     if (hintCount === 0) {
         return duration < 60000 ? flashMessage : noHintMessage;
@@ -47,19 +46,15 @@ function getResultMessage(hintCount: number, totalHints: number, duration: numbe
 export default function StatsPage({
     cryptic,
     unlockedHints,
-    startedAt,
-    completedAt,
-    streak = DUMMY_STREAK,
+    activeMs,
+    streak,
 }: StatsPageProps) {
     const [copied, setCopied] = useState(false);
 
     const hintCount = unlockedHints.length;
-    const totalHints = cryptic.hints.length;
+    const totalHints = getHints(cryptic).length;
 
-    let diff = 0;
-    if (startedAt && completedAt) {
-        diff = completedAt - startedAt;
-    }
+    const diff = Math.max(0, activeMs);
     const hours = Math.floor(diff / 3600000);
     const mins = Math.floor((diff % 3600000) / 60000);
     const secs = Math.floor((diff % 60000) / 1000);
@@ -68,7 +63,7 @@ export default function StatsPage({
     const message = getResultMessage(hintCount, totalHints, diff);
 
     const handleShare = async () => {
-        const text = `Flaş Kriptik #${cryptic.id.split("-")[1]} | ⏱️ ${formattedTime} | 🕵️ ${hintCount}/${totalHints} | ${cryptic.date.replace(/-/g, "/")}`;
+        const text = buildShareText(cryptic, { time: formattedTime, hintCount, totalHints });
         try {
             if (navigator?.clipboard?.writeText) {
                 await navigator.clipboard.writeText(text);

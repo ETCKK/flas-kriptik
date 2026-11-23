@@ -2,32 +2,24 @@ import type { Cryptic } from "@/types";
 
 export const cryptic: Cryptic = {
     id: "e-001",
-    date: "GG-AA-YYYY",
+    number: 1,
+    publishDate: null,
     clue: "Örnek bir kriptik metin.",
     length: 5,
     difficulty: "Kolay",
     author: "Örnek Yazar",
     answer: "cevap",
-    hints: [
-        {
-            text: "Örnek tanım ipucu metni.",
-            type: "tanım",
-            targets: ["tanım"]
-        },
-        {
-            text: "Örnek yönerge ipucu metni.",
-            type: "yönerge",
-            targets: ["yönerge 1", "yönerge 2"]
-        },
-        {
-            text: "Örnek malzeme ipucu metni.",
-            type: "malzeme",
-            targets: ["malzeme 1", "malzeme 2"]
-        }
-    ],
+    definition: {
+        target: "metin",
+        hint: "Örnek tanım ipucu metni.",
+    },
+    indicators: {
+        targets: ["bir"],
+        hint: "Örnek yönerge ipucu metni.",
+    },
+    fodder: {
+        targets: ["kriptik"],
+        hint: "Örnek malzeme ipucu metni.",
+    },
     explanation: "Örnek kriptik cevap açıklaması.",
-    definition: "Örnek kriptik tanımı.",
-    indicators: ["yönerge 1", "yönerge 2"],
-    fodders: ["malzeme 1", "malzeme 2"],
 };
-

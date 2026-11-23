@@ -1,11 +1,14 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import type { Cryptic } from "@/types";
+import { useCallback, useEffect, useRef, useState } from "react";
+import type { HintType, PublishedCryptic } from "@/types";
 import { useGameStore } from "@/store/useGameStore";
-import { normalizeAnswer } from "@/lib/cryptic";
+import { normalizeAnswer } from "@/lib/cryptic/normalize";
+import { formatDisplayDate, todayIstanbul } from "@/lib/date";
+import { computeStreak } from "@/lib/progress/streak";
 import { useCrypticInput } from "./hooks/useCrypticInput";
 import { useCrypticPhase } from "./hooks/useCrypticPhase";
+import { useActiveTimer } from "./hooks/useActiveTimer";
 import { useMounted } from "@/hooks/useMounted";
 
 import Envelope from "./Envelope";
@@ -16,18 +19,28 @@ import StatsPage from "./pages/StatsPage";
 import ExplanationPage from "./pages/ExplanationPage";
 import HintMenu from "./HintMenu";
 
-export default function CrypticBoard({ cryptic }: { cryptic: Cryptic }) {
-    const { games, initCryptic, startPlaying, unlockHint, setWon } = useGameStore();
+export default function CrypticBoard({ cryptic, isDaily }: { cryptic: PublishedCryptic; isDaily: boolean }) {
+    const { games, initCryptic, startPlaying, unlockHint, addActiveTime, setWon } = useGameStore();
     const game = games[cryptic.id];
     const isMounted = useMounted();
     const [isHintMenuOpen, setIsHintMenuOpen] = useState(false);
     const [hasAnswerError, setHasAnswerError] = useState(false);
+    const statsTimeoutRef = useRef<number | undefined>(undefined);
+    const errorTimeoutRef = useRef<number | undefined>(undefined);
 
-    useEffect(() => { initCryptic(cryptic.id); }, [cryptic.id, initCryptic]);
+    useEffect(() => { initCryptic(cryptic.id, cryptic.publishDate); }, [cryptic.id, cryptic.publishDate, initCryptic]);
+
+    useEffect(() => () => {
+        window.clearTimeout(statsTimeoutRef.current);
+        window.clearTimeout(errorTimeoutRef.current);
+    }, []);
 
     const status = isMounted ? (game?.status ?? "idle") : "idle";
     const isWon = status === "won";
     const { phase } = useCrypticPhase(isMounted);
+
+    const handleElapsed = useCallback((ms: number) => addActiveTime(cryptic.id, ms), [addActiveTime, cryptic.id]);
+    const flushActiveTime = useActiveTimer(status === "playing" && phase === "playing", handleElapsed);
 
     const [page, setPage] = useState<CrypticPage>("clue");
     const pages: CrypticPage[] = isWon ? ["clue", "stats", "explanation"] : ["clue"];
@@ -58,17 +71,18 @@ export default function CrypticBoard({ cryptic }: { cryptic: Cryptic }) {
         const answer = letters.join("");
         const isCorrect = normalizeAnswer(answer) === normalizeAnswer(cryptic.answer);
         if (isCorrect) {
-            setWon(cryptic.id);
-            setTimeout(() => setPage("stats"), 800);
+            flushActiveTime();
+            setWon(cryptic.id, isDaily);
+            statsTimeoutRef.current = window.setTimeout(() => setPage("stats"), 800);
             return;
         }
 
         setHasAnswerError(true);
-        window.setTimeout(() => setHasAnswerError(false), 350);
+        errorTimeoutRef.current = window.setTimeout(() => setHasAnswerError(false), 350);
     }
 
-    function handleUnlockHint(hintIndex: number) {
-        unlockHint(cryptic.id, hintIndex);
+    function handleUnlockHint(type: HintType) {
+        unlockHint(cryptic.id, type);
     }
 
     if (!isMounted) return <div className="min-h-[50vh]" />;
@@ -77,7 +91,7 @@ export default function CrypticBoard({ cryptic }: { cryptic: Cryptic }) {
         <div className="relative flex h-full w-full flex-col items-center">
 
             <div className="relative flex flex-1 min-h-0 w-full max-w-2xl items-center justify-center perspective-[1200px]">
-                <CrypticPaper font-typewriter cryptic={cryptic} phase={phase} page={page} pages={pages} onPageChange={setPage}>
+                <CrypticPaper cryptic={cryptic} phase={phase} page={page} pages={pages} onPageChange={setPage}>
                     {page === "clue" && (
                         <CluePage
                             cryptic={cryptic}
@@ -98,8 +112,8 @@ export default function CrypticBoard({ cryptic }: { cryptic: Cryptic }) {
                         <StatsPage
                             cryptic={cryptic}
                             unlockedHints={game?.unlockedHints ?? []}
-                            startedAt={game?.startedAt ?? 0}
-                            completedAt={game?.completedAt ?? 0}
+                            activeMs={game?.activeMs ?? 0}
+                            streak={computeStreak(Object.values(games), todayIstanbul())}
                         />
                     )}
 
@@ -110,7 +124,7 @@ export default function CrypticBoard({ cryptic }: { cryptic: Cryptic }) {
                         />
                     )}
                 </CrypticPaper>
-                <Envelope phase={phase} date={cryptic.date} author={cryptic.author} />
+                <Envelope phase={phase} date={formatDisplayDate(cryptic.publishDate)} author={cryptic.author} />
             </div>
 
             <div className="w-full shrink-0">

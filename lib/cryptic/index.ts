@@ -1,25 +1,31 @@
-import type { Cryptic, Hint } from "@/types";
-import { findCrypticByDate, findCrypticById } from "./repository";
+import type { Cryptic, PublishedCryptic } from "@/types";
+import { todayIstanbul } from "@/lib/date";
+import { findCrypticByDate, findCrypticById, findCrypticByNumber } from "./repository";
+import { normalizeAnswer } from "./normalize";
 
+export { normalizeAnswer };
 
-export async function getCrypticById(id: string): Promise<Cryptic | null> {
-    return findCrypticById(id);
+export function isPublished(cryptic: Cryptic, today: string): cryptic is PublishedCryptic {
+    return cryptic.publishDate !== null && cryptic.publishDate <= today;
 }
 
-export async function getCrypticByDate(date: string): Promise<Cryptic | null> {
-    return findCrypticByDate(date);
+export async function getPublishedByDate(date: string, today: string = todayIstanbul()): Promise<PublishedCryptic | null> {
+    if (date > today) {
+        return null;
+    }
+    const cryptic = await findCrypticByDate(date);
+    return cryptic && isPublished(cryptic, today) ? cryptic : null;
 }
 
-export function normalizeAnswer(answer: string): string {
-    return answer.trim().normalize("NFC").toLocaleLowerCase("tr-TR");
+export async function getPublishedByNumber(number: number, today: string = todayIstanbul()): Promise<PublishedCryptic | null> {
+    const cryptic = await findCrypticByNumber(number);
+    return cryptic && isPublished(cryptic, today) ? cryptic : null;
 }
 
-export async function checkAnswer(id: string, answer: string): Promise<boolean> {
-    const cryptic = await getCrypticById(id);
-    return cryptic ? normalizeAnswer(cryptic.answer) === normalizeAnswer(answer) : false;
-}
-
-export async function getHintByIndex(id: string, index: number): Promise<Hint | null> {
-    const cryptic = await getCrypticById(id);
-    return cryptic?.hints?.[index] ?? null;
+export async function checkAnswer(id: string, answer: string, today: string = todayIstanbul()): Promise<boolean> {
+    const cryptic = await findCrypticById(id);
+    if (!cryptic || !isPublished(cryptic, today)) {
+        return false;
+    }
+    return normalizeAnswer(cryptic.answer) === normalizeAnswer(answer);
 }

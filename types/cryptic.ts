@@ -1,20 +1,30 @@
-import type { Hint } from "./hint";
-
 type CrypticDifficulty = "Kolay" | "Orta" | "Zor";
+
+interface CrypticDefinition {
+    target: string;
+    hint: string;
+}
+
+interface CrypticWordGroup {
+    targets: string[];
+    hint: string;
+}
 
 interface Cryptic {
     id: string;
-    date: string;
+    number: number;
+    publishDate: string | null;
     clue: string;
     length: number;
     author: string;
     difficulty?: CrypticDifficulty;
     answer: string;
-    hints: Hint[];
+    definition: CrypticDefinition;
+    indicators?: CrypticWordGroup;
+    fodder?: CrypticWordGroup;
     explanation?: string;
-    definition?: string;
-    indicators?: string[];
-    fodders?: string[];
 }
 
-export type { Cryptic, CrypticDifficulty };
+type PublishedCryptic = Cryptic & { publishDate: string };
+
+export type { Cryptic, CrypticDefinition, CrypticDifficulty, CrypticWordGroup, PublishedCryptic };

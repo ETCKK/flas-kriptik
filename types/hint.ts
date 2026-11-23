@@ -1,9 +1,9 @@
-type HintType = "yönerge" | "tanım" | "malzeme";
+type HintType = "definition" | "indicators" | "fodder";
 
 interface Hint {
-    text: string;
     type: HintType;
-    targets?: string[];
+    text: string;
+    targets: string[];
 }
 
 export type { Hint, HintType };

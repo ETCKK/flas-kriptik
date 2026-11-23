@@ -50,7 +50,7 @@ export default function MobileNavigationMenu() {
                         onClick={() => setIsOpen(false)}
                     />
 
-                    <div className="absolute left-0 top-10 z-50 w-48 rounded-sm border-2 border-divider bg-surface p-2 shadow-[0_4px_0_var(--color-menu-shadow)] animate-in slide-in-from-top-2 fade-in duration-100">
+                    <div className="absolute left-0 top-10 z-50 w-48 rounded-sm border-2 border-divider bg-surface p-2 shadow-[0_4px_0_var(--color-menu-shadow)]">
                         {navigationItems.map(({ href, label }) => {
                             const isActive = pathname === href;
                             return (
